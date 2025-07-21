@@ -1,6 +1,6 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "3.4.0"
+ThisBuild / scalaVersion := "3.0.0"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 
