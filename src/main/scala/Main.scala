@@ -3,13 +3,12 @@ import scala.swing.event.*
 
 object Main extends SimpleSwingApplication {
   def top: MainFrame = new MainFrame {
-    title = "Minesweeper"
-    preferredSize = new Dimension(300, 200)
-    val label = new Label("Minesweeper")
-    val buttonPlay = new Button("Play")
-    val buttonQuit = new Button("Quit")
+    val label = new Label("Minolovac")
+    val buttonPlay = new Button("Igraj")
+    val buttonQuit = new Button("Izadji")
     val buttons: List[Button] = List(buttonPlay, buttonQuit)
 
+    title = "Minolovac"
     contents = new BoxPanel(Orientation.Vertical) {
       contents += label
       for(button <- buttons) contents += button
