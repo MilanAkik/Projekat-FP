@@ -31,7 +31,9 @@ object Main extends SimpleSwingApplication {
     for(element <- elements) listenTo(element)
 
     reactions += {
-      case ButtonClicked(`buttonPlay`) => label.text = "Now we are playing!"
+      case ButtonClicked(`buttonPlay`) =>
+        DifficultyChooser.frame.visible = true
+        DifficultyChooser.frame.centerOnScreen()
       case ButtonClicked(`buttonEdit`) => label.text = "We are still editing!"
       case ButtonClicked(`buttonQuit`) => this.close()
     }
