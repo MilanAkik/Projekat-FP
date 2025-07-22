@@ -1,7 +1,7 @@
 import scala.swing._
 import scala.swing.event._
 
-object TestClass extends SimpleSwingApplication {
+object Main extends SimpleSwingApplication {
   def top = new MainFrame {
     title = "Hello Scala Swing"
     preferredSize = new Dimension(300, 200)
