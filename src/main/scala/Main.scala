@@ -3,42 +3,37 @@ import scala.swing.event.*
 
 object Main extends SimpleSwingApplication {
 
-  val customFont = new Font("Arial", 1000, 32)
+  private val customFont = new Font("Arial", 1000, 32)
+
+  class MenuButton(labelText: String) extends Button(labelText) {
+    font = Main.customFont
+    horizontalAlignment = Alignment.Center
+  }
+
+  class MenuLabel(labelText: String) extends Label(labelText) {
+    font = Main.customFont
+    horizontalAlignment = Alignment.Center
+  }
 
   def top: MainFrame = new MainFrame {
-    val label:Label = new Label("Minolovac"){
-      font = customFont
-      override def horizontalAlignment: Alignment.Value = Alignment.Center
-    }
-    val buttonPlay:Button = new Button("Igraj"){
-      font = customFont
-      override def horizontalAlignment: Alignment.Value = Alignment.Center
-      margin = new Insets(10,10,10,10)
-    }
-    val buttonEdit:Button = new Button("Izmeni nivo") {
-      font = customFont
-      override def horizontalAlignment: Alignment.Value = Alignment.Center
-      margin = new Insets(10, 10, 10, 10)
-    }
-    val buttonQuit:Button = new Button("Izadji"){
-      font = customFont
-      override def horizontalAlignment: Alignment.Value = Alignment.Center
-    }
-    val buttons: List[Button] = List(buttonPlay, buttonEdit, buttonQuit)
+    val label:Label = new MenuLabel("Minolovac")
+    val buttonPlay:Button = new MenuButton("Igraj")
+    val buttonEdit:Button = new MenuButton("Izmeni nivo")
+    val buttonQuit:Button = new MenuButton("Izadji")
+    val elements: List[Component] = List(label, buttonPlay, buttonEdit, buttonQuit)
 
     title = "Minolovac"
     contents = new GridPanel(4,1) {
-      contents += label
-      for(button <- buttons) contents += button
-      border = Swing.EmptyBorder(10, 100, 10, 100)
+      for(element <- elements) contents += element
+      border = Swing.EmptyBorder(20, 100, 40, 100)
       vGap = 20
     }
-    for(button <- buttons) listenTo(button)
+    for(element <- elements) listenTo(element)
 
     reactions += {
       case ButtonClicked(`buttonPlay`) => label.text = "Now we are playing!"
       case ButtonClicked(`buttonEdit`) => label.text = "We are still editing!"
-      case ButtonClicked(`buttonQuit`) => label.text = "Quit it!"
+      case ButtonClicked(`buttonQuit`) => this.close()
     }
   }
 }
