@@ -3,17 +3,6 @@ import scala.swing.event.*
 
 object Main extends SimpleSwingApplication {
 
-
-  class MenuButton(labelText: String) extends Button(labelText) {
-    font = Constants.customFont
-    horizontalAlignment = Alignment.Center
-  }
-
-  class MenuLabel(labelText: String) extends Label(labelText) {
-    font = Constants.customFont
-    horizontalAlignment = Alignment.Center
-  }
-
   def top: MainFrame = new MainFrame {
     val label:Label = new MenuLabel("Minolovac")
     val buttonPlay:Button = new MenuButton("Igraj")

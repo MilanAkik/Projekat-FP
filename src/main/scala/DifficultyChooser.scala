@@ -2,22 +2,12 @@ import scala.swing.{Alignment, Button, Component, Font, Frame, GridPanel, Label,
 
 object DifficultyChooser {
 
-  class ChooserLabel(labelText: String) extends Label(labelText) {
-    font = Constants.customFont
-    horizontalAlignment = Alignment.Center
-  }
-
-  class ChooserButton(labelText: String) extends Button(labelText) {
-    font = Constants.customFont
-    horizontalAlignment = Alignment.Center
-  }
-
   val frame:Frame = new Frame(){
 
-    val label: Label = new ChooserLabel("Izaberi tezinu")
-    val buttonEasy: Button = new ChooserButton("Lako")
-    val buttonMedium: Button = new ChooserButton("Srednje")
-    val buttonHard: Button = new ChooserButton("Tesko")
+    val label: Label = new MenuLabel("Izaberi tezinu")
+    val buttonEasy: Button = new MenuButton("Lako")
+    val buttonMedium: Button = new MenuButton("Srednje")
+    val buttonHard: Button = new MenuButton("Tesko")
     val elements: List[Component] = List(label, buttonEasy, buttonMedium, buttonHard)
 
     title = "Choose the difficulty"
