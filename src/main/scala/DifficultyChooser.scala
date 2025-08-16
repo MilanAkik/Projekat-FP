@@ -17,10 +17,10 @@ object DifficultyChooser {
   val frame:Frame = new Frame(){
 
     val label: Label = new ChooserLabel("Izaberi tezinu")
-    val buttonPlay: Button = new ChooserButton("Lako")
-    val buttonEdit: Button = new ChooserButton("Srednje")
-    val buttonQuit: Button = new ChooserButton("Tesko")
-    val elements: List[Component] = List(label, buttonPlay, buttonEdit, buttonQuit)
+    val buttonEasy: Button = new ChooserButton("Lako")
+    val buttonMedium: Button = new ChooserButton("Srednje")
+    val buttonHard: Button = new ChooserButton("Tesko")
+    val elements: List[Component] = List(label, buttonEasy, buttonMedium, buttonHard)
 
     title = "Choose the difficulty"
 
