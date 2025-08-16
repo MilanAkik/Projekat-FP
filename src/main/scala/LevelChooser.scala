@@ -3,19 +3,24 @@ import scala.swing.{Component, Frame, GridPanel, Swing, Button}
 
 object LevelChooser {
 
-  val frame:Frame = new Frame() {
-    val elements: List[Component] = getButtonsForLevels(Constants.levelPaths)
-    title = "Izaberite nivo"
-    contents = new GridPanel(3, 4) {
-      for (element <- elements) contents += element
-      border = Swing.EmptyBorder(20, 100, 40, 100)
-      vGap = 20
+  def makeFrame(difficulty: String) : Unit = {
+    frame = new Frame() {
+      val elements: List[Component] = getButtonsForLevels(Constants.levelPaths, difficulty)
+      title = "Izaberite nivo"
+      contents = new GridPanel(3, 4) {
+        for (element <- elements) contents += element
+        border = Swing.EmptyBorder(20, 100, 40, 100)
+        vGap = 20
+      }
     }
   }
 
-  private def getButtonsForLevels(dir: String): List[Component] = {
+  var frame:Frame = new Frame()
+
+  private def getButtonsForLevels(dir: String, difficulty: String): List[Component] = {
     val names:List[String] = getListOfFiles(dir)
-    val buttons:List[Button] = names.map(name => new Button(name))
+    val filteredNames = names.filter(x=>x.startsWith(difficulty))
+    val buttons:List[Button] = filteredNames.map(name => new Button(name))
     buttons
   }
 

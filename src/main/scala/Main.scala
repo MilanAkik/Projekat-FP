@@ -21,8 +21,8 @@ object Main extends SimpleSwingApplication {
 
     reactions += {
       case ButtonClicked(`buttonPlay`) =>
-        LevelChooser.frame.visible = true
-        LevelChooser.frame.centerOnScreen()
+        DifficultyChooser.frame.visible = true
+        DifficultyChooser.frame.centerOnScreen()
       case ButtonClicked(`buttonEdit`) => label.text = "We are still editing!"
       case ButtonClicked(`buttonHighScore`) => label.text = "No high score!"
       case ButtonClicked(`buttonQuit`) => this.close()
