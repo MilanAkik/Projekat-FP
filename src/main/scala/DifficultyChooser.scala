@@ -2,15 +2,13 @@ import scala.swing.{Alignment, Button, Component, Font, Frame, GridPanel, Label,
 
 object DifficultyChooser {
 
-  private val customFont = new Font("Arial", 1000, 32)
-
   class ChooserLabel(labelText: String) extends Label(labelText) {
-    font = DifficultyChooser.customFont
+    font = Constants.customFont
     horizontalAlignment = Alignment.Center
   }
 
   class ChooserButton(labelText: String) extends Button(labelText) {
-    font = DifficultyChooser.customFont
+    font = Constants.customFont
     horizontalAlignment = Alignment.Center
   }
 

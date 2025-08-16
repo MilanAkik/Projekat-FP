@@ -3,15 +3,14 @@ import scala.swing.event.*
 
 object Main extends SimpleSwingApplication {
 
-  private val customFont = new Font("Arial", 1000, 32)
 
   class MenuButton(labelText: String) extends Button(labelText) {
-    font = Main.customFont
+    font = Constants.customFont
     horizontalAlignment = Alignment.Center
   }
 
   class MenuLabel(labelText: String) extends Label(labelText) {
-    font = Main.customFont
+    font = Constants.customFont
     horizontalAlignment = Alignment.Center
   }
 
