@@ -21,7 +21,7 @@ object LevelChooser {
     val names:List[String] = getListOfFiles(dir)
     val filteredNames = names.filter(x=>x.startsWith(difficulty))
     val buttons:List[Button] = filteredNames.map(name => new Button(name))
-    buttons
+    new Button("random")::buttons
   }
 
   private def getListOfFiles(dir: String): List[String] = {
