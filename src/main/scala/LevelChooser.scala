@@ -17,7 +17,7 @@ object LevelChooser {
 
       reactions += {
         case x: ButtonClicked =>
-          LevelPlayer.makeFrame(difficulty+x.source.text)
+          LevelPlayer.makeFrame(x.source.text)
           LevelPlayer.frame.visible = true
           LevelPlayer.frame.centerOnScreen()
       }

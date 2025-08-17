@@ -1,5 +1,5 @@
 import scala.swing.event.ButtonClicked
-import scala.swing.{Button, Component, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
+import scala.swing.{BoxPanel, Button, Component, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 
 object LevelPlayer {
 
@@ -15,16 +15,18 @@ object LevelPlayer {
     }
   }
 
-  def makeGridButton(i: Int, j:Int): Button = {
-    new Button("(" + i + "," + j + ")") {
+  def makeGridButton(i: Int, j:Int, label: Boolean): Button = {
+    new Button(if(label) "X" else "") {
       name = i + "_" + j
     }
   }
 
-  def makeGrid(w: Int, h: Int):GridPanel = {
+  def makeGrid(level: Level):GridPanel = {
+    val w: Int = level.Width()
+    val h: Int = level.Height()
     new GridPanel(h,w){
       var elements: List[Component] = List()
-      for (i <- 1 to w; j <- 1 to h) elements = elements :+ makeGridButton(i,j)
+      for (i <- 0 until w; j <- 0 until h) elements = elements :+ makeGridButton(i,j,level.matrix(i)(j))
       for (element <- elements) {
         contents += element
         listenTo(element)
@@ -38,12 +40,14 @@ object LevelPlayer {
 
   def makeFrame(difficulty: String) : Unit = {
     frame = new Frame() {
-      val elements: List[Component] = List(makeToolbar(),makeGrid(5,10))
+      val elements: List[Component] = List(
+        makeToolbar(),
+        makeGrid(new Level(Constants.levelPaths+"\\"+difficulty))
+      )
       title = "Igrajte " + difficulty
-      contents = new GridPanel(2, 1) {
+      contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
-        border = Swing.EmptyBorder(20, 100, 40, 100)
-        vGap = 20
+        border = Swing.EmptyBorder(20, 20, 20, 20)
       }
     }
   }
