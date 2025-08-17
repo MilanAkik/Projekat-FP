@@ -1,5 +1,6 @@
 import java.io.File
-import scala.swing.{Component, Frame, GridPanel, Swing, Button}
+import scala.swing.event.ButtonClicked
+import scala.swing.{Button, Component, Frame, GridPanel, Swing}
 
 object LevelChooser {
 
@@ -11,6 +12,14 @@ object LevelChooser {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(20, 100, 40, 100)
         vGap = 20
+      }
+      for (element <- elements) listenTo(element)
+
+      reactions += {
+        case x: ButtonClicked =>
+          LevelPlayer.makeFrame(x.source.text)
+          LevelPlayer.frame.visible = true
+          LevelPlayer.frame.centerOnScreen()
       }
     }
   }
