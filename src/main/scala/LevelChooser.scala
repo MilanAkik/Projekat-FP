@@ -7,13 +7,11 @@ object LevelChooser {
   def makeFrame(difficulty: String) : Unit = {
     frame = new Frame() {
       val elements: List[Component] = getButtonsForLevels(Constants.levelPaths, difficulty)
+      val strutted: List[Component] = elements.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
       title = "Izaberite nivo"
       contents = new BoxPanel(Orientation.Vertical) {
-        for (element <- elements){
-          contents += element
-        }
+        for (element <- strutted) contents += element
         border = Swing.EmptyBorder(20, 100, 20, 100)
-//        vGap = 20
       }
       for (element <- elements) listenTo(element)
 
@@ -32,9 +30,7 @@ object LevelChooser {
     val names:List[String] = getListOfFiles(dir)
     val filteredNames = names.filter(x=>x.startsWith(difficulty))
     val buttons:List[Component] = filteredNames.map(name => new MenuButton(name))
-    val comps = new MenuLabel("Izaberite nivo") :: (new MenuButton("random") :: buttons)
-    comps.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
-//    val res:List[Component] = List();
+    new MenuLabel("Izaberite nivo") :: (new MenuButton("random") :: buttons)
   }
 
   private def getListOfFiles(dir: String): List[String] = {

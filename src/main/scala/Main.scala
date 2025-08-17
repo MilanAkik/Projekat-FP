@@ -10,12 +10,12 @@ object Main extends SimpleSwingApplication {
     val buttonHighScore:Button = new MenuButton("Najbolji rezultati")
     val buttonQuit: Button = new MenuButton("Izadji")
     val elements: List[Component] = List(label, buttonPlay, buttonEdit, buttonHighScore, buttonQuit)
+    val strutted: List[Component] = elements.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
 
     title = "Minolovac"
-    contents = new GridPanel(5,1) {
-      for(element <- elements) contents += element
-      border = Swing.EmptyBorder(20, 100, 40, 100)
-      vGap = 20
+    contents = new BoxPanel(Orientation.Vertical) {
+      for(element <- strutted) contents += element
+      border = Swing.EmptyBorder(20, 100, 20, 100)
     }
     for(element <- elements) listenTo(element)
 

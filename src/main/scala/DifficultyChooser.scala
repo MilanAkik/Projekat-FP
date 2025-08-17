@@ -1,5 +1,5 @@
 import scala.swing.event.ButtonClicked
-import scala.swing.{Alignment, Button, Component, Font, Frame, GridPanel, Label, Swing}
+import scala.swing.{Alignment, BoxPanel, Button, Component, Font, Frame, GridPanel, Label, Orientation, Swing}
 
 object DifficultyChooser {
 
@@ -12,13 +12,13 @@ object DifficultyChooser {
     val buttonMedium: Button = new MenuButton("Srednje")
     val buttonHard: Button = new MenuButton("Tesko")
     val elements: List[Component] = List(label, buttonEasy, buttonMedium, buttonHard)
+    val strutted: List[Component] = elements.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
 
     title = "Choose the difficulty"
 
-    contents = new GridPanel(4, 1) {
-      for (element <- elements) contents += element
-      border = Swing.EmptyBorder(20, 100, 40, 100)
-      vGap = 20
+    contents = new BoxPanel(Orientation.Vertical) {
+      for (element <- strutted) contents += element
+      border = Swing.EmptyBorder(20, 100, 20, 100)
     }
     for (element <- elements) listenTo(element)
 
