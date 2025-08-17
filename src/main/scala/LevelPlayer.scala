@@ -1,3 +1,4 @@
+import scala.swing.event.ButtonClicked
 import scala.swing.{Button, Component, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 
 object LevelPlayer {
@@ -14,10 +15,24 @@ object LevelPlayer {
     }
   }
 
+  def makeGridButton(i: Int, j:Int): Button = {
+    new Button("(" + i + "," + j + ")") {
+      name = i + "_" + j
+    }
+  }
+
   def makeGrid(w: Int, h: Int):GridPanel = {
     new GridPanel(h,w){
-      val elements: List[Component] = List()
-      for (i <- 1 to w; j <- 1 to h) contents += new Button("("+i+","+j+")")
+      var elements: List[Component] = List()
+      for (i <- 1 to w; j <- 1 to h) elements = elements :+ makeGridButton(i,j)
+      for (element <- elements) {
+        contents += element
+        listenTo(element)
+      }
+
+      reactions += {
+        case click: ButtonClicked => print(click.source.name)
+      }
     }
   }
 
