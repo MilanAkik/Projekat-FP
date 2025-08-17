@@ -1,6 +1,6 @@
 import java.io.File
 import scala.swing.event.ButtonClicked
-import scala.swing.{Button, Component, Frame, GridPanel, Swing}
+import scala.swing.{BoxPanel, Button, Component, Dimension, Frame, GridPanel, Label, Orientation, Swing}
 
 object LevelChooser {
 
@@ -8,10 +8,12 @@ object LevelChooser {
     frame = new Frame() {
       val elements: List[Component] = getButtonsForLevels(Constants.levelPaths, difficulty)
       title = "Izaberite nivo"
-      contents = new GridPanel(3, 4) {
-        for (element <- elements) contents += element
-        border = Swing.EmptyBorder(20, 100, 40, 100)
-        vGap = 20
+      contents = new BoxPanel(Orientation.Vertical) {
+        for (element <- elements){
+          contents += element
+        }
+        border = Swing.EmptyBorder(20, 100, 20, 100)
+//        vGap = 20
       }
       for (element <- elements) listenTo(element)
 
@@ -29,8 +31,10 @@ object LevelChooser {
   private def getButtonsForLevels(dir: String, difficulty: String): List[Component] = {
     val names:List[String] = getListOfFiles(dir)
     val filteredNames = names.filter(x=>x.startsWith(difficulty))
-    val buttons:List[Button] = filteredNames.map(name => new Button(name))
-    new Button("random")::buttons
+    val buttons:List[Component] = filteredNames.map(name => new MenuButton(name))
+    val comps = new MenuLabel("Izaberite nivo") :: (new MenuButton("random") :: buttons)
+    comps.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
+//    val res:List[Component] = List();
   }
 
   private def getListOfFiles(dir: String): List[String] = {
