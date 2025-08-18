@@ -1,22 +1,21 @@
 import scala.swing.event.ButtonClicked
-import scala.swing.{BoxPanel, Button, Component, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
+import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 
 object LevelPlayer {
 
-  val btnSave = new Button("Sacuvaj")
-  val btnHint = new Button("Pomoc")
-  val labelScore = new Label("Rezultat: ")
-  val labelTime = new Label("Vreme: ")
-
-  def makeToolbar():GridPanel = {
-    new GridPanel(1, 4) {
+  def makeToolbar():FlowPanel = {
+    val btnSave = new MenuButton("Sacuvaj")
+    val btnHint = new MenuButton("Pomoc")
+    val labelScore = new MenuLabel("Rezultat: ")
+    val labelTime = new MenuLabel("Vreme: ")
+    new FlowPanel() {
       val elements: List[Component] = List(btnSave, btnHint, labelScore, labelTime)
       for (element <- elements) contents += element
     }
   }
 
   def makeGridButton(i: Int, j:Int, label: Boolean): Button = {
-    new Button(if(label) "X" else "") {
+    new MenuButton(if(label) "X" else "") {
       name = i + "_" + j
     }
   }
