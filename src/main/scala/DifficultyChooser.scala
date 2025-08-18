@@ -18,7 +18,7 @@ object DifficultyChooser {
 
     contents = new BoxPanel(Orientation.Vertical) {
       for (element <- strutted) contents += element
-      border = Swing.EmptyBorder(20, 100, 20, 100)
+      border = Swing.EmptyBorder(20, 60, 20, 60)
     }
     for (element <- elements) listenTo(element)
 

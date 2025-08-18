@@ -40,11 +40,11 @@ object LevelPlayer {
   def makeFrame(difficulty: String) : Unit = {
     frame = new Frame() {
       val level = new Level(Constants.levelPaths+"\\"+difficulty)
-      val elements: List[Component] = List( makeToolbar(), makeGrid(level) )
+      val elements: List[Component] = List( makeToolbar(), Swing.VStrut(10), makeGrid(level) )
       title = "Igrajte " + difficulty
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
-        border = Swing.EmptyBorder(20, 20, 20, 20)
+        border = Swing.EmptyBorder(10, 10, 10, 10)
       }
     }
   }
