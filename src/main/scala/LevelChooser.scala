@@ -6,7 +6,7 @@ object LevelChooser {
 
   def makeFrame(difficulty: String) : Unit = {
     frame = new Frame() {
-      val elements: List[Component] = getButtonsForLevels(Constants.levelPaths, difficulty)
+      val elements: List[Component] = getButtonsForLevels(Constants.levelPaths+"\\"+difficulty)
       val strutted: List[Component] = elements.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
       title = "Izaberite nivo"
       contents = new BoxPanel(Orientation.Vertical) {
@@ -17,7 +17,7 @@ object LevelChooser {
 
       reactions += {
         case x: ButtonClicked =>
-          LevelPlayer.makeFrame(x.source.text)
+          LevelPlayer.makeFrame(difficulty+"\\"+x.source.text)
           LevelPlayer.frame.visible = true
           LevelPlayer.frame.centerOnScreen()
       }
@@ -26,10 +26,9 @@ object LevelChooser {
 
   var frame:Frame = new Frame()
 
-  private def getButtonsForLevels(dir: String, difficulty: String): List[Component] = {
+  private def getButtonsForLevels(dir: String): List[Component] = {
     val names:List[String] = getListOfFiles(dir)
-    val filteredNames = names.filter(x=>x.startsWith(difficulty))
-    val buttons:List[Component] = filteredNames.map(name => new MenuButton(name))
+    val buttons:List[Component] = names.map(name => new MenuButton(name))
     new MenuLabel("Izaberite nivo") :: (new MenuButton("random") :: buttons)
   }
 
