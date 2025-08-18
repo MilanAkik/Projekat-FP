@@ -27,5 +27,6 @@ object Main extends SimpleSwingApplication {
       case ButtonClicked(`buttonHighScore`) => label.text = "No high score!"
       case ButtonClicked(`buttonQuit`) => this.close()
     }
+    centerOnScreen()
   }
 }

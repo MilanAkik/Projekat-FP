@@ -39,10 +39,8 @@ object LevelPlayer {
 
   def makeFrame(difficulty: String) : Unit = {
     frame = new Frame() {
-      val elements: List[Component] = List(
-        makeToolbar(),
-        makeGrid(new Level(Constants.levelPaths+"\\"+difficulty))
-      )
+      val level = new Level(Constants.levelPaths+"\\"+difficulty)
+      val elements: List[Component] = List( makeToolbar(), makeGrid(level) )
       title = "Igrajte " + difficulty
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
