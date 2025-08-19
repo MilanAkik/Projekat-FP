@@ -11,7 +11,7 @@ class Board(var l:Level) {
     for (i <- 0 until level.Height()) {
       res(i) = new Array[FieldState](level.Width())
       for (j <- 0 until level.Width()) {
-        res(i)(j) = GetRandomFieldState(rand)
+        res(i)(j) = FieldState.Unopened
       }
     }
     res

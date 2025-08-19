@@ -1,4 +1,4 @@
-import scala.swing.event.ButtonClicked
+import scala.swing.event.{ButtonClicked, MouseClicked}
 import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 
 object LevelPlayer {
@@ -32,6 +32,14 @@ object LevelPlayer {
   }
 
   def makeGrid(board: Board):GridPanel = {
+    def buttonClick(click: MouseClicked):Unit = {
+      val mouseBtn = click.peer.getButton match {
+        case java.awt.event.MouseEvent.BUTTON1 =>"Left"
+        case java.awt.event.MouseEvent.BUTTON3 =>"Right"
+        case _ => "Other"
+      }
+      println(mouseBtn + " clicked " + click.source.name)
+    }
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     new GridPanel(h,w){
@@ -39,11 +47,11 @@ object LevelPlayer {
       for (i <- 0 until w; j <- 0 until h) elements = elements :+ makeGridButton(i,j,board.matrix(i)(j))
       for (element <- elements) {
         contents += element
-        listenTo(element)
+        listenTo(element.mouse.clicks)
       }
 
       reactions += {
-        case click: ButtonClicked => print(click.source.name)
+        case click: MouseClicked => buttonClick(click)
       }
     }
   }
