@@ -58,12 +58,7 @@ object LevelPlayer {
 
   def makeFrame(difficulty: String, fileName: String) : Unit = {
     frame = new Frame() {
-      val level: Level = fileName match
-        case "random" => difficulty match
-          case "easy" => new Level(9,9,10)
-          case "medium" => new Level(16,16,40)
-          case "hard" =>new Level(30,16,99)
-        case _ => new Level(Constants.levelPaths+"\\"+difficulty+"\\"+fileName)
+      val level:Level = new Level(difficulty, fileName)
       val board:Board = new Board(level)
       val elements: List[Component] = List( makeToolbar(), Swing.VStrut(10), makeGrid(board) )
       title = "Igrajte " + difficulty

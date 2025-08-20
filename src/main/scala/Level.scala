@@ -8,16 +8,15 @@ class Level {
   def Width(): Int = matrix.length
   def Height(): Int = matrix(0).length
 
-  def this(path: String)={
+  def this(difficulty: String, fileName: String) = {
     this()
-    matrix = readInMatrix(path)
+    matrix = fileName match
+      case "random" => difficulty match
+        case "easy" => randomLevel(9, 9, 10)
+        case "medium" => randomLevel(16, 16, 40)
+        case "hard" => randomLevel(30, 16, 99)
+      case _ => readInMatrix(Constants.levelPaths + "\\" + difficulty + "\\" + fileName)
   }
-
-  def this(width:Int, height:Int, mines: Int) = {
-    this()
-    matrix = randomLevel(width, height, mines)
-  }
-
 
   private def readInMatrix(path: String):Array[Array[Boolean]] = {
     val source = scala.io.Source.fromFile(path)
