@@ -76,16 +76,6 @@ object LevelPlayer {
     }
   }
 
-  def makeFrame(board: Board): Unit = {
-    frame = new Frame() {
-      val elements: List[Component] = List(makeToolbar(), Swing.VStrut(10), makeGrid(board))
-      contents = new BoxPanel(Orientation.Vertical) {
-        for (element <- elements) contents += element
-        border = Swing.EmptyBorder(10, 10, 10, 10)
-      }
-    }
-  }
-
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
 
