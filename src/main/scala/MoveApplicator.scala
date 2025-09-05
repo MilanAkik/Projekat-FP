@@ -11,7 +11,18 @@ object MoveApplicator {
         case FieldState.Unopened =>
           if(board.level.matrix(x)(y)) FieldState.Bomb
           else getSurroundingCount(board.level, x, y) match{
-            case 0 => FieldState.Zero
+            case 0 =>
+              val w = board.level.Width()
+              val h = board.level.Height()
+              val deltas = for {
+                dx <- -1 to 1
+                dy <- -1 to 1
+                if !(dx == 0 && dy == 0)
+              } yield (dx, dy)
+              deltas.map { case (dx, dy) => (x + dx, y + dy) }
+                .filter { case (nx, ny) => nx >= 0 && nx < w && ny >= 0 && ny < h }
+                .foreach { case (nx, ny) => rest = Move('L',nx, ny) :: rest }
+              FieldState.Zero
             case 1 => FieldState.One
             case 2 => FieldState.Two
             case 3 => FieldState.Three
