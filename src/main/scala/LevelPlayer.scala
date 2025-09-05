@@ -33,12 +33,18 @@ object LevelPlayer {
 
   def makeGrid(board: Board):GridPanel = {
     def buttonClick(click: MouseClicked):Unit = {
-      val mouseBtn = click.peer.getButton match {
-        case java.awt.event.MouseEvent.BUTTON1 =>"Left"
-        case java.awt.event.MouseEvent.BUTTON3 =>"Right"
-        case _ => "Other"
+      val name = click.source.name.split('_')
+      val x = name(0).toInt
+      val y = name(1).toInt
+      val move = click.peer.getButton match {
+        case java.awt.event.MouseEvent.BUTTON1 => Move('L',x,y)
+        case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
-      println(mouseBtn + " clicked " + click.source.name)
+      println("Move" + move)
+      val newBoard = MoveApplicator.ApplyMoves(board, List(move))
+      frame.dispose()
+      makeFrame(newBoard)
+      frame.visible = true
     }
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
@@ -49,7 +55,6 @@ object LevelPlayer {
         contents += element
         listenTo(element.mouse.clicks)
       }
-
       reactions += {
         case click: MouseClicked => buttonClick(click)
       }
@@ -62,6 +67,16 @@ object LevelPlayer {
       val board:Board = new Board(level)
       val elements: List[Component] = List( makeToolbar(), Swing.VStrut(10), makeGrid(board) )
       title = "Igrajte " + difficulty
+      contents = new BoxPanel(Orientation.Vertical) {
+        for (element <- elements) contents += element
+        border = Swing.EmptyBorder(10, 10, 10, 10)
+      }
+    }
+  }
+
+  def makeFrame(board: Board): Unit = {
+    frame = new Frame() {
+      val elements: List[Component] = List(makeToolbar(), Swing.VStrut(10), makeGrid(board))
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
