@@ -14,42 +14,44 @@ object LevelPlayer {
     }
   }
 
+  def mapFieldState(state:FieldState) : String = state match
+    case FieldState.Unopened => "|"
+    case FieldState.Zero => " "
+    case FieldState.One => "1"
+    case FieldState.Two => "2"
+    case FieldState.Three => "3"
+    case FieldState.Four => "4"
+    case FieldState.Five => "5"
+    case FieldState.Six => "6"
+    case FieldState.Seven => "7"
+    case FieldState.Eight => "8"
+    case FieldState.Flag => "P"
+    case FieldState.Bomb => "@"
+
   def makeGridButton(i: Int, j:Int, state: FieldState): Button = {
-    var label = state match
-      case FieldState.Unopened => "."
-      case FieldState.Zero => " "
-      case FieldState.One => "1"
-      case FieldState.Two => "2"
-      case FieldState.Three => "3"
-      case FieldState.Four => "4"
-      case FieldState.Five => "5"
-      case FieldState.Six => "6"
-      case FieldState.Seven => "7"
-      case FieldState.Eight => "8"
-      case FieldState.Flag => "P"
-      case FieldState.Bomb => "@"
-    new MenuButton(label) { name = i + "_" + j }
+    new MenuButton(mapFieldState(state)) { name = i + "_" + j }
   }
 
   def makeGrid(board: Board):GridPanel = {
+    val w: Int = board.level.Width()
+    val h: Int = board.level.Height()
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
-      val x = name(0).toInt
-      val y = name(1).toInt
+      val y = name(0).toInt
+      val x = name(1).toInt
       val move = click.peer.getButton match {
         case java.awt.event.MouseEvent.BUTTON1 => Move('L',x,y)
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
       println("Move" + move)
       val newBoard = MoveApplicator.ApplyMoves(board, List(move))
-      frame.dispose()
-      makeFrame(newBoard)
-      frame.visible = true
+      for (i <- 0 until w; j <- 0 until h){
+        elements(i*h+j).text = mapFieldState(newBoard.matrix(j)(i))
+        elements(i*h+j).repaint()
+      }
     }
-    val w: Int = board.level.Width()
-    val h: Int = board.level.Height()
     new GridPanel(w,h){
-      var elements: List[Component] = List()
+      elements = List()
       for (i <- 0 until w; j <- 0 until h) elements = elements :+ makeGridButton(i,j,board.matrix(j)(i))
       for (element <- elements) {
         contents += element
@@ -85,5 +87,6 @@ object LevelPlayer {
   }
 
   var frame:Frame = new Frame()
+  var elements: List[Button] = List()
 
 }
