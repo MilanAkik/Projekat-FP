@@ -5,11 +5,11 @@ object MoveApplicator {
   def ApplyMoves(board: Board, moves:List[Move]): Board = {
     val Move(button,x,y) = moves.head
     var rest = moves.tail
-    val oldVal = board.matrix(x)(y)
+    val oldVal = board.matrix(y)(x)
     val newVal = button match {
       case 'L' => oldVal match {
         case FieldState.Unopened =>
-          if(board.level.matrix(x)(y)) FieldState.Bomb
+          if(board.level.matrix(y)(x)) FieldState.Bomb
           else getSurroundingCount(board.level, x, y) match{
             case 0 =>
               val w = board.level.Width()
@@ -41,7 +41,7 @@ object MoveApplicator {
       }
       case _ => throw new IllegalArgumentException("Unexpected number: " + button)
     }
-    board.matrix(x)(y) = newVal
+    board.matrix(y)(x) = newVal
     if (rest.isEmpty) board
     else ApplyMoves(board, rest)
   }
@@ -58,7 +58,7 @@ object MoveApplicator {
       val (dx, dy) = delta
       val nx = x + dx
       val ny = y + dy
-      nx >= 0 && nx < w && ny >= 0 && ny < h && level.matrix(nx)(ny)
+      nx >= 0 && nx < w && ny >= 0 && ny < h && level.matrix(ny)(nx)
     }
   }
 

@@ -28,8 +28,8 @@ object LevelPlayer {
     case FieldState.Flag => "P"
     case FieldState.Bomb => "@"
 
-  def makeGridButton(i: Int, j:Int, state: FieldState): Button = {
-    new MenuButton(mapFieldState(state)) { name = i + "_" + j }
+  def makeGridButton(x: Int, y:Int, state: FieldState): Button = {
+    new MenuButton(mapFieldState(state)) { name = x + "_" + y }
   }
 
   def makeGrid(board: Board):GridPanel = {
@@ -37,22 +37,22 @@ object LevelPlayer {
     val h: Int = board.level.Height()
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
-      val y = name(0).toInt
-      val x = name(1).toInt
+      val x = name(0).toInt
+      val y = name(1).toInt
       val move = click.peer.getButton match {
         case java.awt.event.MouseEvent.BUTTON1 => Move('L',x,y)
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
       println("Move" + move)
       val newBoard = MoveApplicator.ApplyMoves(board, List(move))
-      for (i <- 0 until w; j <- 0 until h){
-        elements(i*h+j).text = mapFieldState(newBoard.matrix(j)(i))
-        elements(i*h+j).repaint()
+      for (j <- 0 until h; i <- 0 until w){
+        elements(j*w+i).text = mapFieldState(newBoard.matrix(j)(i))
+        elements(j*h+i).repaint()
       }
     }
-    new GridPanel(w,h){
+    new GridPanel(h,w){
       elements = List()
-      for (i <- 0 until w; j <- 0 until h) elements = elements :+ makeGridButton(i,j,board.matrix(j)(i))
+      for (j <- 0 until h; i <- 0 until w) elements = elements :+ makeGridButton(i,j,board.matrix(j)(i))
       for (element <- elements) {
         contents += element
         listenTo(element.mouse.clicks)

@@ -5,16 +5,16 @@ class Level {
   var matrix: Array[Array[Boolean]] = new Array[Array[Boolean]](1)
 
   val random: Random = new Random(1234)
-  def Width(): Int = matrix.length
-  def Height(): Int = matrix(0).length
+  def Height(): Int = matrix.length
+  def Width(): Int = matrix(0).length
 
   def this(difficulty: String, fileName: String) = {
     this()
     matrix = fileName match
       case "random" => difficulty match
         case "easy" => randomLevel(9, 9, 10)
-        case "medium" => randomLevel(16, 16, 40)
-        case "hard" => randomLevel(30, 16, 99)
+        case "medium" => randomLevel(16, 16, 15)
+        case "hard" => randomLevel(30, 16, 20)
       case _ => readInMatrix(Constants.levelPaths + "\\" + difficulty + "\\" + fileName)
   }
 
@@ -47,9 +47,10 @@ class Level {
       var row: Int = random.nextInt(height)
       while
         res(row)(col)
-      do
+      do {
         col = random.nextInt(width)
         row = random.nextInt(height)
+      }
       res(row)(col)=true
     }
     res
