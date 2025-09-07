@@ -25,7 +25,7 @@ object LevelPlayer {
         val moveList = List(Move('L', hintX, hintY))
         MoveApplicator.ApplyMoves(board, moveList)
         for (j <- 0 until h; i <- 0 until w) {
-          LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
+          LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
           LevelPlayer.elements(j * h + i).repaint()
         }
         score = score - 2
@@ -40,7 +40,7 @@ object LevelPlayer {
 
           MoveApplicator.ApplyMoves(board, moveList)
           for (j <- 0 until h; i <- 0 until w) {
-            LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
+            LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
             LevelPlayer.elements(j * h + i).repaint()
           }
           score = score - lines.length
@@ -73,22 +73,8 @@ object LevelPlayer {
     }
   }
 
-  def mapFieldState(state:FieldState) : String = state match
-    case FieldState.Unopened => "|"
-    case FieldState.Zero => " "
-    case FieldState.One => "1"
-    case FieldState.Two => "2"
-    case FieldState.Three => "3"
-    case FieldState.Four => "4"
-    case FieldState.Five => "5"
-    case FieldState.Six => "6"
-    case FieldState.Seven => "7"
-    case FieldState.Eight => "8"
-    case FieldState.Flag => "P"
-    case FieldState.Bomb => "@"
-
   def makeGridButton(x: Int, y:Int, state: FieldState): Button = {
-    new MenuButton(mapFieldState(state)) { name = x + "_" + y }
+    new MenuButton(state.mapFieldState) { name = x + "_" + y }
   }
 
   def makeGrid(board: Board):GridPanel = {
@@ -105,7 +91,7 @@ object LevelPlayer {
       println("Move" + move)
       MoveApplicator.ApplyMoves(board, List(move))
       for (j <- 0 until h; i <- 0 until w){
-        elements(j*w+i).text = mapFieldState(board.matrix(j)(i))
+        elements(j*w+i).text = board.matrix(j)(i).mapFieldState
         elements(j*h+i).repaint()
       }
       score = score - 1
