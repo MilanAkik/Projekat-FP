@@ -1,33 +1,48 @@
 import scala.swing.event.{ButtonClicked, MouseClicked}
 import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
+import java.util.{Timer, TimerTask}
 
 object LevelPlayer {
+
+  def handleToolbarClick(click: MouseClicked, board: Board): Unit = {
+    click.source.name match
+      case "btnSave" => println("Saving")
+      case "btnHint" =>
+        val h = board.level.Height()
+        val w = board.level.Width()
+        val (hintY, hintX) = board.getRandomSafeUnopened
+        val moveList = List(Move('L', hintX, hintY))
+        MoveApplicator.ApplyMoves(board, moveList)
+        for (j <- 0 until h; i <- 0 until w) {
+          LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
+          LevelPlayer.elements(j * h + i).repaint()
+        }
+  }
 
   def makeToolbar(board: Board):FlowPanel = {
     val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
     val labelScore = new MenuLabel("Rezultat: ")
     val labelTime = new MenuLabel("Vreme: ")
+
+    val timer = new Timer()
+    time = new Time(0)
+    val task = new TimerTask {
+      override def run(): Unit = {
+        labelTime.text = LevelPlayer.time.formatted
+        labelTime.repaint()
+        LevelPlayer.time.increment()
+      }
+    }
+    timer.schedule(task, 0, 1000)
+
     new FlowPanel() {
       val elements: List[Component] = List(btnSave, btnHint, labelScore, labelTime)
       for (element <- elements){
         contents += element
         listenTo(element.mouse.clicks)
       }
-      reactions += {
-        case click: MouseClicked => click.source.name match
-          case "btnSave" => println("Saving")
-          case "btnHint" =>
-            val h = board.level.Height()
-            val w = board.level.Width()
-            val (hintY, hintX) = board.getRandomSafeUnopened()
-            val moveList = List(Move('L', hintX, hintY))
-            MoveApplicator.ApplyMoves(board, moveList)
-            for (j <- 0 until h; i <- 0 until w) {
-              LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
-              LevelPlayer.elements(j * h + i).repaint()
-            }
-      }
+      reactions += { case click: MouseClicked => handleToolbarClick(click, board) }
     }
   }
 
@@ -95,5 +110,6 @@ object LevelPlayer {
 
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
+  var time: Time = _
 
 }
