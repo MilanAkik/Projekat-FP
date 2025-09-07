@@ -4,13 +4,19 @@ import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, La
 object LevelPlayer {
 
   def makeToolbar():FlowPanel = {
-    val btnSave = new MenuButton("Sacuvaj")
-    val btnHint = new MenuButton("Pomoc")
+    val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
+    val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
     val labelScore = new MenuLabel("Rezultat: ")
     val labelTime = new MenuLabel("Vreme: ")
     new FlowPanel() {
       val elements: List[Component] = List(btnSave, btnHint, labelScore, labelTime)
-      for (element <- elements) contents += element
+      for (element <- elements){
+        contents += element
+        listenTo(element.mouse.clicks)
+      }
+      reactions += {
+        case click: MouseClicked => labelScore.text = click.source.name
+      }
     }
   }
 
