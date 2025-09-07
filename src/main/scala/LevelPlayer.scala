@@ -1,15 +1,26 @@
+import java.io.File
 import scala.swing.event.{ButtonClicked, MouseClicked}
-import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
+import scala.swing.{BoxPanel, Button, Component, FileChooser, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 import java.util.{Timer, TimerTask}
 
 object LevelPlayer {
 
+  def makeMove(text:String):Move = {
+    val button = text(0) match {
+      case 'L' => 'L'
+      case 'D' => 'R'
+      case _ => throw new Exception("Unknown button")
+    }
+    val coords = text.substring(2,text.length-1).split(',')
+    Move(button, coords(0).toIntOption.get,coords(1).toIntOption.get)
+  }
+
   def handleToolbarClick(click: MouseClicked, board: Board): Unit = {
+    val h = board.level.Height()
+    val w = board.level.Width()
     click.source.name match
       case "btnSave" => println("Saving")
       case "btnHint" =>
-        val h = board.level.Height()
-        val w = board.level.Width()
         val (hintY, hintX) = board.getRandomSafeUnopened
         val moveList = List(Move('L', hintX, hintY))
         MoveApplicator.ApplyMoves(board, moveList)
@@ -19,14 +30,30 @@ object LevelPlayer {
         }
         score = score - 2
         redrawLabels()
+      case "btnMoves" =>
+        val chooser = new FileChooser(new File(Constants.movesPaths))
+        if( chooser.showOpenDialog(null) == FileChooser.Result.Approve ){
+          val source = scala.io.Source.fromFile(chooser.selectedFile)
+          val linesString = try source.mkString finally source.close()
+          val lines = linesString.split("(\r\n|\n)")
+          val moveList = lines.toList.map(t=>makeMove(t))
+
+          MoveApplicator.ApplyMoves(board, moveList)
+          for (j <- 0 until h; i <- 0 until w) {
+            LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
+            LevelPlayer.elements(j * h + i).repaint()
+          }
+          score = score - lines.length
+          redrawLabels()
+        }
   }
 
   def makeToolbar(board: Board):FlowPanel = {
     val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
+    val btnMoves = new MenuButton("Potezi") { name = "btnMoves" }
 
     val timer = new Timer()
-    time = new Time(0)
     val task = new TimerTask {
       override def run(): Unit = {
         time.increment()
@@ -37,7 +64,7 @@ object LevelPlayer {
     timer.schedule(task, 0, 1000)
 
     new FlowPanel() {
-      val elements: List[Component] = List(btnSave, btnHint, labelScore, labelTime)
+      val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
       for (element <- elements){
         contents += element
         listenTo(element.mouse.clicks)
@@ -99,6 +126,8 @@ object LevelPlayer {
 
   def makeFrame(difficulty: String, fileName: String) : Unit = {
     frame = new Frame() {
+      time = new Time(0)
+      score = 100
       val level:Level = new Level(difficulty, fileName)
       val board:Board = new Board(level)
       val elements: List[Component] = List( makeToolbar(board), Swing.VStrut(10), makeGrid(board) )
@@ -120,7 +149,7 @@ object LevelPlayer {
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
   var time: Time = _
-  var score: Int = 100
+  var score: Int = _
   val labelScore = new MenuLabel("Rezultat: ")
   val labelTime = new MenuLabel("Vreme: ")
 
