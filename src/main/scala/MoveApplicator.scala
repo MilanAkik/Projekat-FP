@@ -9,7 +9,12 @@ object MoveApplicator {
     val newVal = button match {
       case 'L' => oldVal match {
         case FieldState.Unopened =>
-          if(board.level.matrix(y)(x)) FieldState.Bomb
+          if(board.level.matrix(y)(x)){
+            for( j <- 0 until board.level.Height(); i <- 0 until board.level.Width() ) {
+              if (board.level.matrix(j)(i) && board.matrix(j)(i) == FieldState.Unopened) rest = Move('L', i, j) :: rest
+            }
+            FieldState.Bomb
+          }
           else getSurroundingCount(board.level, x, y) match{
             case 0 =>
               val w = board.level.Width()
