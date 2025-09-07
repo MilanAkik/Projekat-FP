@@ -17,21 +17,21 @@ object LevelPlayer {
           LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
           LevelPlayer.elements(j * h + i).repaint()
         }
+        score = score - 2
+        redrawLabels()
   }
 
   def makeToolbar(board: Board):FlowPanel = {
     val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
-    val labelScore = new MenuLabel("Rezultat: ")
-    val labelTime = new MenuLabel("Vreme: ")
 
     val timer = new Timer()
     time = new Time(0)
     val task = new TimerTask {
       override def run(): Unit = {
-        labelTime.text = LevelPlayer.time.formatted
-        labelTime.repaint()
-        LevelPlayer.time.increment()
+        time.increment()
+        if ((time.seconds % 10) == 0) score = score - 1
+        redrawLabels()
       }
     }
     timer.schedule(task, 0, 1000)
@@ -81,6 +81,8 @@ object LevelPlayer {
         elements(j*w+i).text = mapFieldState(board.matrix(j)(i))
         elements(j*h+i).repaint()
       }
+      score = score - 1
+      redrawLabels()
     }
     new GridPanel(h,w){
       elements = List()
@@ -108,8 +110,18 @@ object LevelPlayer {
     }
   }
 
+  def redrawLabels():Unit = {
+    labelScore.text = "Rezultat: %03d".format(score)
+    labelTime.text = "Vreme: %s".format(time.formatted)
+    labelScore.repaint()
+    labelTime.repaint()
+  }
+
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
   var time: Time = _
+  var score: Int = 100
+  val labelScore = new MenuLabel("Rezultat: ")
+  val labelTime = new MenuLabel("Vreme: ")
 
 }
