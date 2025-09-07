@@ -50,9 +50,9 @@ object LevelPlayer {
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
       println("Move" + move)
-      val newBoard = MoveApplicator.ApplyMoves(board, List(move))
+      MoveApplicator.ApplyMoves(board, List(move))
       for (j <- 0 until h; i <- 0 until w){
-        elements(j*w+i).text = mapFieldState(newBoard.matrix(j)(i))
+        elements(j*w+i).text = mapFieldState(board.matrix(j)(i))
         elements(j*h+i).repaint()
       }
     }

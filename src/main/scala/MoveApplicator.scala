@@ -2,7 +2,7 @@ import scala.annotation.tailrec
 
 object MoveApplicator {
   @tailrec
-  def ApplyMoves(board: Board, moves:List[Move]): Board = {
+  def ApplyMoves(board: Board, moves:List[Move]): Unit = {
     val Move(button,x,y) = moves.head
     var rest = moves.tail
     val oldVal = board.matrix(y)(x)
@@ -47,8 +47,7 @@ object MoveApplicator {
       case _ => throw new IllegalArgumentException("Unexpected number: " + button)
     }
     board.matrix(y)(x) = newVal
-    if (rest.isEmpty) board
-    else ApplyMoves(board, rest)
+    if (rest.nonEmpty) ApplyMoves(board, rest)
   }
 
   private def getSurroundingCount(level: Level, x:Int, y:Int): Int = {
