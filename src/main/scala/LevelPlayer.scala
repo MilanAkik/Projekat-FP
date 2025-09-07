@@ -3,7 +3,7 @@ import scala.swing.{BoxPanel, Button, Component, FlowPanel, Frame, GridPanel, La
 
 object LevelPlayer {
 
-  def makeToolbar():FlowPanel = {
+  def makeToolbar(board: Board):FlowPanel = {
     val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
     val labelScore = new MenuLabel("Rezultat: ")
@@ -15,7 +15,18 @@ object LevelPlayer {
         listenTo(element.mouse.clicks)
       }
       reactions += {
-        case click: MouseClicked => labelScore.text = click.source.name
+        case click: MouseClicked => click.source.name match
+          case "btnSave" => println("Saving")
+          case "btnHint" =>
+            val h = board.level.Height()
+            val w = board.level.Width()
+            val (hintY, hintX) = board.getRandomSafeUnopened()
+            val moveList = List(Move('L', hintX, hintY))
+            MoveApplicator.ApplyMoves(board, moveList)
+            for (j <- 0 until h; i <- 0 until w) {
+              LevelPlayer.elements(j * w + i).text = mapFieldState(board.matrix(j)(i))
+              LevelPlayer.elements(j * h + i).repaint()
+            }
       }
     }
   }
@@ -73,7 +84,7 @@ object LevelPlayer {
     frame = new Frame() {
       val level:Level = new Level(difficulty, fileName)
       val board:Board = new Board(level)
-      val elements: List[Component] = List( makeToolbar(), Swing.VStrut(10), makeGrid(board) )
+      val elements: List[Component] = List( makeToolbar(board), Swing.VStrut(10), makeGrid(board) )
       title = "Igrajte " + difficulty
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element

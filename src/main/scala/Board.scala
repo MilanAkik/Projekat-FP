@@ -5,6 +5,16 @@ class Board(var l:Level) {
   val level: Level = l
   val matrix: Array[Array[FieldState]] = initBoard()
 
+  def getRandomSafeUnopened: (Int, Int) = {
+    val rand = new Random(1234)
+    val deltas = for {
+      row <- 0 until level.Height()
+      col <- 0 until level.Width()
+      if !level.matrix(row)(col) && matrix(row)(col)==FieldState.Unopened
+    } yield (row, col)
+    deltas(rand.nextInt(deltas.length))
+  }
+
   private def initBoard(): Array[Array[FieldState]] = {
     val res = new Array[Array[FieldState]](level.Height())
     val rand = new Random(1234)
