@@ -1,7 +1,5 @@
 import scala.swing.{Alignment, *}
 import scala.swing.event.*
-import io.circe._, io.circe.parser._, io.circe.syntax._
-import io.circe.generic.auto._
 
 object Main extends SimpleSwingApplication {
 
@@ -30,22 +28,5 @@ object Main extends SimpleSwingApplication {
       case ButtonClicked(`buttonQuit`) => this.close()
     }
     centerOnScreen()
-
-    case class Cell(x: Int, y: Int, isMine: Boolean)
-
-    val c: Cell = Cell(2, 3, true)
-
-    // object → JSON string
-    val jsonString: String = c.asJson.noSpaces
-
-    println(jsonString)
-    // {"x":2,"y":3,"isMine":true}
-    val decoded: Either[io.circe.Error, Cell] = decode[Cell](jsonString)
-
-    decoded match {
-      case Right(cell) => println(s"Got cell: $cell")
-      case Left(err) => println(s"Failed to decode: $err")
-    }
-
   }
 }
