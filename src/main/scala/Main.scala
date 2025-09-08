@@ -1,5 +1,6 @@
 import scala.swing.{Alignment, *}
 import scala.swing.event.*
+import io.circe._, io.circe.parser._
 
 object Main extends SimpleSwingApplication {
 
@@ -28,5 +29,18 @@ object Main extends SimpleSwingApplication {
       case ButtonClicked(`buttonQuit`) => this.close()
     }
     centerOnScreen()
+
+
+    val rawJson: String =
+      """
+    {
+      "foo": "bar",
+      "baz": 123,
+      "list of stuff": [ 4, 5, 6 ]
+    }
+    """
+    val parseResult: Either[ParsingFailure, Json] = parse(rawJson)
+    val a: Either[ParsingFailure, Json] = parseResult
+
   }
 }
