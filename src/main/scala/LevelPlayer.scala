@@ -9,8 +9,6 @@ import java.nio.charset.StandardCharsets
 
 object LevelPlayer {
 
-  case class Save(board: Array[Array[FieldState]], level: Array[Array[Boolean]])
-
   def makeMove(text:String):Move = {
     val button = text(0) match {
       case 'L' => 'L'
