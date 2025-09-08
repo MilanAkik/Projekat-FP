@@ -2,8 +2,14 @@ import java.io.File
 import scala.swing.event.{ButtonClicked, MouseClicked}
 import scala.swing.{BoxPanel, Button, Component, FileChooser, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 import java.util.{Timer, TimerTask}
+import io.circe._, io.circe.parser._, io.circe.syntax._
+import io.circe.generic.auto._
+import java.nio.file.{Files, Paths}
+import java.nio.charset.StandardCharsets
 
 object LevelPlayer {
+
+  case class Save(board: Array[Array[FieldState]], level: Array[Array[Boolean]])
 
   def makeMove(text:String):Move = {
     val button = text(0) match {
@@ -19,7 +25,10 @@ object LevelPlayer {
     val h = board.level.Height()
     val w = board.level.Width()
     click.source.name match
-      case "btnSave" => println("Saving")
+      case "btnSave" =>
+        val save:Save = Save(board.matrix, board.level.matrix)
+        val jsonString: String = save.asJson.noSpaces
+        Files.write(Paths.get(Constants.savesPaths+"\\save.json"), jsonString.getBytes(StandardCharsets.UTF_8))
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
         val moveList = List(Move('L', hintX, hintY))
