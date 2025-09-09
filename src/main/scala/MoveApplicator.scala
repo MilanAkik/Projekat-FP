@@ -10,6 +10,7 @@ object MoveApplicator {
       case 'L' => oldVal match {
         case FieldState.Unopened =>
           if(board.level.matrix(y)(x)){
+            rest = List[Move]()
             for( j <- 0 until board.level.Height(); i <- 0 until board.level.Width() ) {
               if (board.level.matrix(j)(i) && board.matrix(j)(i) == FieldState.Unopened) rest = Move('L', i, j) :: rest
             }
