@@ -24,7 +24,7 @@ object LevelPlayer {
     val w = board.level.Width()
     click.source.name match
       case "btnSave" =>
-        val save:Save = Save(board.matrix, board.level.matrix)
+        val save:Save = Save(board.matrix, board.level.matrix, time.seconds, score)
         val jsonString: String = save.asJson.noSpaces
         Files.write(Paths.get(Constants.savesPaths+"\\save.json"), jsonString.getBytes(StandardCharsets.UTF_8))
       case "btnHint" =>
