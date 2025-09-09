@@ -24,9 +24,12 @@ object LevelPlayer {
     val w = board.level.Width()
     click.source.name match
       case "btnSave" =>
-        val save:Save = Save(board.matrix, board.level.matrix, time.seconds, score)
-        val jsonString: String = save.asJson.noSpaces
-        Files.write(Paths.get(Constants.savesPaths+"\\save.json"), jsonString.getBytes(StandardCharsets.UTF_8))
+        val chooser = new FileChooser(new File(Constants.savesPaths))
+        if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
+          val save: Save = Save(board.matrix, board.level.matrix, time.seconds, score)
+          val jsonString: String = save.asJson.noSpaces
+          Files.write(chooser.selectedFile.toPath, jsonString.getBytes(StandardCharsets.UTF_8))
+        }
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
         val moveList = List(Move('L', hintX, hintY))
