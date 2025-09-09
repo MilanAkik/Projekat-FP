@@ -100,9 +100,10 @@ object LevelPlayer {
       }
       println("Move" + move)
       MoveApplicator.ApplyMoves(board, List(move))
+      if(board.unopenedSafeCount == 0) println("Congrats")
       for (j <- 0 until h; i <- 0 until w){
         elements(j*w+i).text = board.matrix(j)(i).mapFieldState
-        elements(j*h+i).repaint()
+        elements(j*w+i).repaint()
       }
       score = score - 1
       redrawLabels()

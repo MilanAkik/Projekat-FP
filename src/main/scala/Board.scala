@@ -9,6 +9,15 @@ class Board(var l:Level) {
     matrix = save.board
   }
 
+  def unopenedSafeCount : Int = {
+    val deltas = for {
+      row <- 0 until level.Height()
+      col <- 0 until level.Width()
+      if !level.matrix(row)(col) && matrix(row)(col) == FieldState.Unopened
+    } yield (row, col)
+    deltas.count(x=>true)
+  }
+
   def getRandomSafeUnopened: (Int, Int) = {
     val rand = new Random(1234)
     val deltas = for {
