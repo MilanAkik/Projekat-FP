@@ -18,6 +18,11 @@ class Level {
       case _ => readInMatrix(Constants.levelPaths + "\\" + difficulty + "\\" + fileName)
   }
 
+  def this(save: Save) = {
+    this()
+    matrix = save.level
+  }
+
   private def readInMatrix(path: String):Array[Array[Boolean]] = {
     val source = scala.io.Source.fromFile(path)
     val linesString = try source.mkString finally source.close()

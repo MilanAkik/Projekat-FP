@@ -3,7 +3,11 @@ import scala.util.Random
 class Board(var l:Level) {
 
   val level: Level = l
-  val matrix: Array[Array[FieldState]] = initBoard()
+  var matrix: Array[Array[FieldState]] = initBoard()
+
+  def loadBoard(save: Save): Unit = {
+    matrix = save.board
+  }
 
   def getRandomSafeUnopened: (Int, Int) = {
     val rand = new Random(1234)
