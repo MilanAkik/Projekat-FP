@@ -33,7 +33,8 @@ object LevelPlayer {
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
         val moveList = List(Move('L', hintX, hintY))
-        MoveApplicator.ApplyMoves(board, moveList)
+        val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
+        if (failed || board.unopenedSafeCount == 0) pause()
         for (j <- 0 until h; i <- 0 until w) {
           LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
           LevelPlayer.elements(j * h + i).repaint()
@@ -48,7 +49,8 @@ object LevelPlayer {
           val lines = linesString.split("(\r\n|\n)")
           val moveList = lines.toList.map(t=>makeMove(t))
 
-          MoveApplicator.ApplyMoves(board, moveList)
+          val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
+          if (failed || board.unopenedSafeCount == 0) pause()
           for (j <- 0 until h; i <- 0 until w) {
             LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
             LevelPlayer.elements(j * h + i).repaint()
@@ -63,14 +65,7 @@ object LevelPlayer {
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
     val btnMoves = new MenuButton("Potezi") { name = "btnMoves" }
 
-    val timer = new Timer()
-    val task = new TimerTask {
-      override def run(): Unit = {
-        time.increment()
-        if ((time.seconds % 10) == 0) score = score - 1
-        redrawLabels()
-      }
-    }
+    timer = new Timer()
     timer.schedule(task, 0, 1000)
 
     new FlowPanel() {
@@ -99,8 +94,8 @@ object LevelPlayer {
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
       println("Move" + move)
-      MoveApplicator.ApplyMoves(board, List(move))
-      if(board.unopenedSafeCount == 0) println("Congrats")
+      val failed:Boolean = MoveApplicator.ApplyMoves(board, List(move))
+      if(failed || board.unopenedSafeCount == 0) pause()
       for (j <- 0 until h; i <- 0 until w){
         elements(j*w+i).text = board.matrix(j)(i).mapFieldState
         elements(j*w+i).repaint()
@@ -159,8 +154,24 @@ object LevelPlayer {
     labelTime.repaint()
   }
 
+  def pause(): Unit = {
+    timer.cancel()
+    timer.purge()
+  }
+
+  def task: TimerTask = {
+    new TimerTask {
+      override def run(): Unit = {
+        time.increment()
+        if ((time.seconds % 10) == 0) score = score - 1
+        redrawLabels()
+      }
+    }
+  }
+
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
+  var timer: Timer = _
   var time: Time = _
   var score: Int = _
   val labelScore = new MenuLabel("Rezultat: ")
