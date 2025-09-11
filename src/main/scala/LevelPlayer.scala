@@ -63,10 +63,10 @@ object LevelPlayer {
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     new GridPanel(h,w){
-      elements = List()
+      grid = List()
       for (j <- 0 until h; i <- 0 until w)
-        elements = elements :+ new MenuButton(board.matrix(j)(i).mapFieldState) { name = i + "_" + j }
-      for (element <- elements) {
+        grid = grid :+ new MenuButton(board.matrix(j)(i).mapFieldState) { name = i + "_" + j }
+      for (element <- grid) {
         contents += element
         listenTo(element.mouse.clicks)
       }
@@ -142,13 +142,13 @@ object LevelPlayer {
     val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
     if (failed || board.unopenedSafeCount == 0) Ticker.stop()
     for (j <- 0 until h; i <- 0 until w) {
-      elements(j * w + i).text = board.matrix(j)(i).mapFieldState
-      elements(j * w + i).repaint()
+      grid(j * w + i).text = board.matrix(j)(i).mapFieldState
+      grid(j * w + i).repaint()
     }
   }
 
   var frame:Frame = new Frame()
-  var elements: List[Button] = List()
+  var grid : List[Button] = List()
   var time: Time = _
   var score: Int = _
   val labelScore = new MenuLabel("Rezultat: ")
