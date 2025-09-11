@@ -34,13 +34,7 @@ object LevelPlayer {
         }
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
-        val moveList = List(Move('L', hintX, hintY))
-        val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
-        if (failed || board.unopenedSafeCount == 0) Ticker.stop()
-        for (j <- 0 until h; i <- 0 until w) {
-          LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
-          LevelPlayer.elements(j * h + i).repaint()
-        }
+        onMove(board, List(Move('L', hintX, hintY)))
         score = score - 2
         redrawLabels()
       case "btnMoves" =>
@@ -49,14 +43,7 @@ object LevelPlayer {
           val source = scala.io.Source.fromFile(chooser.selectedFile)
           val linesString = try source.mkString finally source.close()
           val lines = linesString.split("(\r\n|\n)")
-          val moveList = lines.toList.map(t=>makeMove(t))
-
-          val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
-          if (failed || board.unopenedSafeCount == 0) Ticker.stop()
-          for (j <- 0 until h; i <- 0 until w) {
-            LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
-            LevelPlayer.elements(j * h + i).repaint()
-          }
+          onMove(board, lines.toList.map(t=>makeMove(t)))
           score = score - lines.length
           redrawLabels()
         }
@@ -82,8 +69,6 @@ object LevelPlayer {
   }
 
   def makeGrid(board: Board):GridPanel = {
-    val w: Int = board.level.Width()
-    val h: Int = board.level.Height()
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
       val x = name(0).toInt
@@ -93,15 +78,12 @@ object LevelPlayer {
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
       println("Move" + move)
-      val failed:Boolean = MoveApplicator.ApplyMoves(board, List(move))
-      if(failed || board.unopenedSafeCount == 0) Ticker.stop()
-      for (j <- 0 until h; i <- 0 until w){
-        elements(j*w+i).text = board.matrix(j)(i).mapFieldState
-        elements(j*w+i).repaint()
-      }
+      onMove(board, List(move))
       score = score - 1
       redrawLabels()
     }
+    val w: Int = board.level.Width()
+    val h: Int = board.level.Height()
     new GridPanel(h,w){
       elements = List()
       for (j <- 0 until h; i <- 0 until w) elements = elements :+ makeGridButton(i,j,board.matrix(j)(i))
@@ -169,6 +151,17 @@ object LevelPlayer {
 
   val onClose:() => Unit = () => {
     Ticker.stop()
+  }
+
+  val onMove:(Board, List[Move]) => Unit = (board: Board, moves:List[Move]) => {
+    val w: Int = board.level.Width()
+    val h: Int = board.level.Height()
+    val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
+    if (failed || board.unopenedSafeCount == 0) Ticker.stop()
+    for (j <- 0 until h; i <- 0 until w) {
+      elements(j * w + i).text = board.matrix(j)(i).mapFieldState
+      elements(j * w + i).repaint()
+    }
   }
 
   var frame:Frame = new Frame()
