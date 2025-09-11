@@ -12,16 +12,6 @@ import java.nio.charset.StandardCharsets
 
 object LevelPlayer {
 
-  def makeMove(text:String):Move = {
-    val button = text(0) match {
-      case 'L' => 'L'
-      case 'D' => 'R'
-      case _ => throw new Exception("Unknown button")
-    }
-    val coords = text.substring(2,text.length-1).split(',')
-    Move(button, coords(0).toIntOption.get,coords(1).toIntOption.get)
-  }
-
   def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
     val h = board.level.Height()
     val w = board.level.Width()
@@ -41,11 +31,9 @@ object LevelPlayer {
       case "btnMoves" =>
         val chooser = new FileChooser(new File(Constants.movesPaths))
         if( chooser.showOpenDialog(null) == FileChooser.Result.Approve ){
-          val source = scala.io.Source.fromFile(chooser.selectedFile)
-          val linesString = try source.mkString finally source.close()
-          val lines = linesString.split("(\r\n|\n)")
-          onMove(board, lines.toList.map(t=>makeMove(t)))
-          score = score - lines.length
+          val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
+          onMove(board, moves)
+          score = score - moves.length
           redrawLabels()
         }
   }
