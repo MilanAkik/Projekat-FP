@@ -6,7 +6,6 @@ import io.circe.*
 import io.circe.parser.*
 import io.circe.syntax.*
 import io.circe.generic.auto.*
-
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
 
@@ -117,13 +116,12 @@ object LevelPlayer {
   }
 
   def makeFrame(difficulty: String, fileName: String) : Unit = {
+    time = new Time(0)
+    score = 100
     frame = new Frame() {
-      time = new Time(0)
-      score = 100
       val level:Level = new Level(difficulty, fileName)
       val board:Board = new Board(level)
       val elements: List[Component] = List( makeToolbar(board), Swing.VStrut(10), makeGrid(board) )
-      title = "Igrajte " + difficulty
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
@@ -137,14 +135,13 @@ object LevelPlayer {
   }
 
   def makeFrame(save: Save): Unit = {
+    time = new Time(save.time)
+    score = save.score
     frame = new Frame() {
-      time = new Time(save.time)
-      score = save.score
       val level: Level = new Level(save)
       val board: Board = new Board(level)
       board.loadBoard(save)
       val elements: List[Component] = List(makeToolbar(board), Swing.VStrut(10), makeGrid(board))
-      title = "Igrajte"
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
