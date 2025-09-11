@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets
 
 object LevelPlayer {
 
-  def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
+  private def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
     click.source.name match {
       case "btnSave" =>
         val chooser = new FileChooser(new File(Constants.savesPaths))
@@ -36,7 +36,7 @@ object LevelPlayer {
     redrawLabels()
   }
 
-  def makeToolbar()(using board: Board):FlowPanel = new FlowPanel() {
+  private def makeToolbar()(using board: Board):FlowPanel = new FlowPanel() {
     val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
     for (element <- elements){
       contents += element
@@ -45,7 +45,7 @@ object LevelPlayer {
     reactions += { case click: MouseClicked => handleToolbarClick(click) }
   }
 
-  def makeGrid()(using board: Board):GridPanel = {
+  private def makeGrid()(using board: Board):GridPanel = {
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
       val x = name(0).toInt
@@ -117,24 +117,24 @@ object LevelPlayer {
     Ticker.start(onTick, 1000)
   }
 
-  def redrawLabels():Unit = {
+  private def redrawLabels():Unit = {
     labelScore.text = "Rezultat: %03d".format(score)
     labelTime.text = "Vreme: %s".format(time.formatted)
     labelScore.repaint()
     labelTime.repaint()
   }
 
-  val onTick:()=>Unit = () => {
+  private val onTick:()=>Unit = () => {
     time.increment()
     if ((time.seconds % 10) == 0) score = score - 1
     redrawLabels()
   }
 
-  val onClose:() => Unit = () => {
+  private val onClose:() => Unit = () => {
     Ticker.stop()
   }
 
-  val onMove:(Board, List[Move]) => Unit = (board: Board, moves:List[Move]) => {
+  private val onMove:(Board, List[Move]) => Unit = (board: Board, moves:List[Move]) => {
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
@@ -146,13 +146,13 @@ object LevelPlayer {
   }
 
   var frame:Frame = new Frame()
-  var grid : List[Button] = List()
-  var time: Time = _
-  var score: Int = _
-  val labelScore = new MenuLabel("Rezultat: ")
-  val labelTime = new MenuLabel("Vreme: ")
-  val btnSave: Button = new MenuButton("Sacuvaj") { name = "btnSave" }
-  val btnHint: Button = new MenuButton("?") { name = "btnHint" }
-  val btnMoves: Button = new MenuButton("Potezi") { name = "btnMoves" }
+  private var grid : List[Button] = List()
+  private var time: Time = _
+  private var score: Int = _
+  private val labelScore = new MenuLabel("Rezultat: ")
+  private val labelTime = new MenuLabel("Vreme: ")
+  private val btnSave: Button = new MenuButton("Sacuvaj") { name = "btnSave" }
+  private val btnHint: Button = new MenuButton("?") { name = "btnHint" }
+  private val btnMoves: Button = new MenuButton("Potezi") { name = "btnMoves" }
 
 }
