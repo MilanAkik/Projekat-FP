@@ -1,9 +1,12 @@
 import java.io.File
-import scala.swing.event.{ButtonClicked, MouseClicked}
+import scala.swing.event.{ButtonClicked, MouseClicked, WindowClosing}
 import scala.swing.{BoxPanel, Button, Component, FileChooser, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
 import java.util.{Timer, TimerTask}
-import io.circe._, io.circe.parser._, io.circe.syntax._
-import io.circe.generic.auto._
+import io.circe.*
+import io.circe.parser.*
+import io.circe.syntax.*
+import io.circe.generic.auto.*
+
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
 
@@ -34,7 +37,7 @@ object LevelPlayer {
         val (hintY, hintX) = board.getRandomSafeUnopened
         val moveList = List(Move('L', hintX, hintY))
         val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
-        if (failed || board.unopenedSafeCount == 0) pause()
+        if (failed || board.unopenedSafeCount == 0) Ticker.stop()
         for (j <- 0 until h; i <- 0 until w) {
           LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
           LevelPlayer.elements(j * h + i).repaint()
@@ -50,7 +53,7 @@ object LevelPlayer {
           val moveList = lines.toList.map(t=>makeMove(t))
 
           val failed: Boolean = MoveApplicator.ApplyMoves(board, moveList)
-          if (failed || board.unopenedSafeCount == 0) pause()
+          if (failed || board.unopenedSafeCount == 0) Ticker.stop()
           for (j <- 0 until h; i <- 0 until w) {
             LevelPlayer.elements(j * w + i).text = board.matrix(j)(i).mapFieldState
             LevelPlayer.elements(j * h + i).repaint()
@@ -64,9 +67,6 @@ object LevelPlayer {
     val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
     val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
     val btnMoves = new MenuButton("Potezi") { name = "btnMoves" }
-
-    timer = new Timer()
-    timer.schedule(task, 0, 1000)
 
     new FlowPanel() {
       val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
@@ -95,7 +95,7 @@ object LevelPlayer {
       }
       println("Move" + move)
       val failed:Boolean = MoveApplicator.ApplyMoves(board, List(move))
-      if(failed || board.unopenedSafeCount == 0) pause()
+      if(failed || board.unopenedSafeCount == 0) Ticker.stop()
       for (j <- 0 until h; i <- 0 until w){
         elements(j*w+i).text = board.matrix(j)(i).mapFieldState
         elements(j*w+i).repaint()
@@ -128,7 +128,12 @@ object LevelPlayer {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
+      listenTo(this)
+      reactions += {
+        case WindowClosing(_) => onClose()
+      }
     }
+    Ticker.start(onTick, 1000)
   }
 
   def makeFrame(save: Save): Unit = {
@@ -144,7 +149,12 @@ object LevelPlayer {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
+      listenTo(this)
+      reactions += {
+        case WindowClosing(_) => onClose()
+      }
     }
+    Ticker.start(onTick, 1000)
   }
 
   def redrawLabels():Unit = {
@@ -154,24 +164,18 @@ object LevelPlayer {
     labelTime.repaint()
   }
 
-  def pause(): Unit = {
-    timer.cancel()
-    timer.purge()
+  val onTick:()=>Unit = () => {
+    time.increment()
+    if ((time.seconds % 10) == 0) score = score - 1
+    redrawLabels()
   }
 
-  def task: TimerTask = {
-    new TimerTask {
-      override def run(): Unit = {
-        time.increment()
-        if ((time.seconds % 10) == 0) score = score - 1
-        redrawLabels()
-      }
-    }
+  val onClose:() => Unit = () => {
+    Ticker.stop()
   }
 
   var frame:Frame = new Frame()
   var elements: List[Button] = List()
-  var timer: Timer = _
   var time: Time = _
   var score: Int = _
   val labelScore = new MenuLabel("Rezultat: ")
