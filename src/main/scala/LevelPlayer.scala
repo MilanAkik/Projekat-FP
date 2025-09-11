@@ -6,6 +6,7 @@ import io.circe.*
 import io.circe.parser.*
 import io.circe.syntax.*
 import io.circe.generic.auto.*
+import java.awt.Dimension
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
 
@@ -21,7 +22,7 @@ object LevelPlayer {
     Move(button, coords(0).toIntOption.get,coords(1).toIntOption.get)
   }
 
-  def handleToolbarClick(click: MouseClicked, board: Board): Unit = {
+  def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
     val h = board.level.Height()
     val w = board.level.Width()
     click.source.name match
@@ -49,20 +50,20 @@ object LevelPlayer {
         }
   }
 
-  def makeToolbar(board: Board):FlowPanel = new FlowPanel() {
+  def makeToolbar()(using board: Board):FlowPanel = new FlowPanel() {
     val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
     for (element <- elements){
       contents += element
       listenTo(element.mouse.clicks)
     }
-    reactions += { case click: MouseClicked => handleToolbarClick(click, board) }
+    reactions += { case click: MouseClicked => handleToolbarClick(click) }
   }
 
   def makeGridButton(x: Int, y:Int, state: FieldState): Button = {
     new MenuButton(state.mapFieldState) { name = x + "_" + y }
   }
 
-  def makeGrid(board: Board):GridPanel = {
+  def makeGrid()(using board: Board):GridPanel = {
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
       val x = name(0).toInt
@@ -71,7 +72,6 @@ object LevelPlayer {
         case java.awt.event.MouseEvent.BUTTON1 => Move('L',x,y)
         case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
       }
-      println("Move" + move)
       onMove(board, List(move))
       score = score - 1
       redrawLabels()
@@ -94,10 +94,11 @@ object LevelPlayer {
   def makeFrame(difficulty: String, fileName: String) : Unit = {
     time = new Time(0)
     score = 100
+    val level: Level = new Level(difficulty, fileName)
     frame = new Frame() {
-      val level:Level = new Level(difficulty, fileName)
       val board:Board = new Board(level)
-      val elements: List[Component] = List( makeToolbar(board), Swing.VStrut(10), makeGrid(board) )
+      given Board = board
+      val elements: List[Component] = List( makeToolbar(), Swing.VStrut(10), makeGrid() )
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
@@ -106,6 +107,7 @@ object LevelPlayer {
       reactions += {
         case WindowClosing(_) => onClose()
       }
+      minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
   }
@@ -113,11 +115,12 @@ object LevelPlayer {
   def makeFrame(save: Save): Unit = {
     time = new Time(save.time)
     score = save.score
+    val level: Level = new Level(save)
     frame = new Frame() {
-      val level: Level = new Level(save)
       val board: Board = new Board(level)
       board.loadBoard(save)
-      val elements: List[Component] = List(makeToolbar(board), Swing.VStrut(10), makeGrid(board))
+      given Board = board
+      val elements: List[Component] = List(makeToolbar(), Swing.VStrut(10), makeGrid())
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
@@ -126,6 +129,7 @@ object LevelPlayer {
       reactions += {
         case WindowClosing(_) => onClose()
       }
+      minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
   }
