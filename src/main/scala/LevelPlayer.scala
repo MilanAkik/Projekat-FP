@@ -13,9 +13,7 @@ import java.nio.charset.StandardCharsets
 object LevelPlayer {
 
   def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
-    val h = board.level.Height()
-    val w = board.level.Width()
-    click.source.name match
+    click.source.name match {
       case "btnSave" =>
         val chooser = new FileChooser(new File(Constants.savesPaths))
         if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
@@ -27,15 +25,15 @@ object LevelPlayer {
         val (hintY, hintX) = board.getRandomSafeUnopened
         onMove(board, List(Move('L', hintX, hintY)))
         score = score - 2
-        redrawLabels()
       case "btnMoves" =>
         val chooser = new FileChooser(new File(Constants.movesPaths))
-        if( chooser.showOpenDialog(null) == FileChooser.Result.Approve ){
+        if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
           val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
           onMove(board, moves)
           score = score - moves.length
-          redrawLabels()
         }
+    }
+    redrawLabels()
   }
 
   def makeToolbar()(using board: Board):FlowPanel = new FlowPanel() {
