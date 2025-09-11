@@ -9,6 +9,7 @@ import io.circe.generic.auto.*
 import java.awt.Dimension
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
+import java.awt.event.MouseEvent.{BUTTON1, BUTTON3}
 
 object LevelPlayer {
 
@@ -132,12 +133,10 @@ object LevelPlayer {
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {
-    val name = click.source.name.split('_')
-    val x = name(0).toInt
-    val y = name(1).toInt
+    val Array(x, y, rest*) = click.source.name.split('_')
     val move = click.peer.getButton match {
-      case java.awt.event.MouseEvent.BUTTON1 => Move('L', x, y)
-      case java.awt.event.MouseEvent.BUTTON3 => Move('R', x, y)
+      case BUTTON1 => Move('L', x.toInt, y.toInt)
+      case BUTTON3 => Move('R', x.toInt, y.toInt)
     }
     onMove(board, List(move))
     score = score - 1
