@@ -49,19 +49,13 @@ object LevelPlayer {
         }
   }
 
-  def makeToolbar(board: Board):FlowPanel = {
-    val btnSave = new MenuButton("Sacuvaj"){ name = "btnSave" }
-    val btnHint = new MenuButton("Pomoc") { name = "btnHint" }
-    val btnMoves = new MenuButton("Potezi") { name = "btnMoves" }
-
-    new FlowPanel() {
-      val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
-      for (element <- elements){
-        contents += element
-        listenTo(element.mouse.clicks)
-      }
-      reactions += { case click: MouseClicked => handleToolbarClick(click, board) }
+  def makeToolbar(board: Board):FlowPanel = new FlowPanel() {
+    val elements: List[Component] = List(btnSave, btnHint, btnMoves, labelScore, labelTime)
+    for (element <- elements){
+      contents += element
+      listenTo(element.mouse.clicks)
     }
+    reactions += { case click: MouseClicked => handleToolbarClick(click, board) }
   }
 
   def makeGridButton(x: Int, y:Int, state: FieldState): Button = {
@@ -170,5 +164,8 @@ object LevelPlayer {
   var score: Int = _
   val labelScore = new MenuLabel("Rezultat: ")
   val labelTime = new MenuLabel("Vreme: ")
+  val btnSave: Button = new MenuButton("Sacuvaj") { name = "btnSave" }
+  val btnHint: Button = new MenuButton("?") { name = "btnHint" }
+  val btnMoves: Button = new MenuButton("Potezi") { name = "btnMoves" }
 
 }
