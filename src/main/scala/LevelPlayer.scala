@@ -8,7 +8,7 @@ import io.circe.syntax.*
 import io.circe.generic.auto.*
 import java.awt.Dimension
 import java.nio.file.{Files, Paths}
-import java.nio.charset.StandardCharsets
+import java.nio.charset.StandardCharsets.UTF_8
 import java.awt.event.MouseEvent.{BUTTON1, BUTTON3}
 
 object LevelPlayer {
@@ -20,8 +20,7 @@ object LevelPlayer {
         val chooser = new FileChooser(new File(Constants.savesPaths))
         if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
           val save: Save = Save(board.matrix, board.level.matrix, time.seconds, score)
-          val jsonString: String = save.asJson.noSpaces
-          Files.write(chooser.selectedFile.toPath, jsonString.getBytes(StandardCharsets.UTF_8))
+          Files.write(chooser.selectedFile.toPath, save.asJson.noSpaces.getBytes(UTF_8))
         }
         Ticker.start(onTick, 1000)
       case "btnHint" =>
