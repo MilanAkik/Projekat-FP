@@ -47,10 +47,6 @@ object LevelPlayer {
     reactions += { case click: MouseClicked => handleToolbarClick(click) }
   }
 
-  def makeGridButton(x: Int, y:Int, state: FieldState): Button = {
-    new MenuButton(state.mapFieldState) { name = x + "_" + y }
-  }
-
   def makeGrid()(using board: Board):GridPanel = {
     def buttonClick(click: MouseClicked):Unit = {
       val name = click.source.name.split('_')
@@ -68,7 +64,8 @@ object LevelPlayer {
     val h: Int = board.level.Height()
     new GridPanel(h,w){
       elements = List()
-      for (j <- 0 until h; i <- 0 until w) elements = elements :+ makeGridButton(i,j,board.matrix(j)(i))
+      for (j <- 0 until h; i <- 0 until w)
+        elements = elements :+ new MenuButton(board.matrix(j)(i).mapFieldState) { name = i + "_" + j }
       for (element <- elements) {
         contents += element
         listenTo(element.mouse.clicks)
