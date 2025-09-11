@@ -25,15 +25,13 @@ object LevelPlayer {
         Ticker.start(onTick, 1000)
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
-        onMove(board, List(Move('L', hintX, hintY)))
-        score = score - 2
+        onMove(List(Move('L', hintX, hintY)), 2)
       case "btnMoves" =>
         Ticker.stop()
         val chooser = new FileChooser(new File(Constants.movesPaths))
         if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
           val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
-          onMove(board, moves)
-          score = score - moves.length
+          onMove(moves, moves.length)
         }
         Ticker.start(onTick, 1000)
     }
@@ -120,7 +118,7 @@ object LevelPlayer {
     Ticker.stop()
   }
 
-  private val onMove:(Board, List[Move]) => Unit = (board: Board, moves:List[Move]) => {
+  private def onMove(moves:List[Move], scoreUpdate: Int)(using board: Board): Unit = {
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
@@ -129,6 +127,7 @@ object LevelPlayer {
       grid(j * w + i).text = board.matrix(j)(i).mapFieldState
       grid(j * w + i).repaint()
     }
+    score = score - scoreUpdate
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {
@@ -137,8 +136,7 @@ object LevelPlayer {
       case BUTTON1 => Move('L', x.toInt, y.toInt)
       case BUTTON3 => Move('R', x.toInt, y.toInt)
     }
-    onMove(board, List(move))
-    score = score - 1
+    onMove(List(move), 1)
     redrawLabels()
   }
 
