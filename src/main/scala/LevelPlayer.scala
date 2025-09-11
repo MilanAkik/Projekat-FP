@@ -50,18 +50,6 @@ object LevelPlayer {
   }
 
   private def makeGrid()(using board: Board):GridPanel = {
-    def buttonClick(click: MouseClicked):Unit = {
-      val name = click.source.name.split('_')
-      val x = name(0).toInt
-      val y = name(1).toInt
-      val move = click.peer.getButton match {
-        case java.awt.event.MouseEvent.BUTTON1 => Move('L',x,y)
-        case java.awt.event.MouseEvent.BUTTON3 => Move('R',x,y)
-      }
-      onMove(board, List(move))
-      score = score - 1
-      redrawLabels()
-    }
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     new GridPanel(h,w){
@@ -72,9 +60,7 @@ object LevelPlayer {
         contents += element
         listenTo(element.mouse.clicks)
       }
-      reactions += {
-        case click: MouseClicked => buttonClick(click)
-      }
+      reactions += { case click: MouseClicked => gridClick(click) }
     }
   }
 
@@ -91,9 +77,7 @@ object LevelPlayer {
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
       listenTo(this)
-      reactions += {
-        case WindowClosing(_) => onClose()
-      }
+      reactions += { case WindowClosing(_) => onClose() }
       minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
@@ -113,9 +97,7 @@ object LevelPlayer {
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
       listenTo(this)
-      reactions += {
-        case WindowClosing(_) => onClose()
-      }
+      reactions += { case WindowClosing(_) => onClose() }
       minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
@@ -147,6 +129,19 @@ object LevelPlayer {
       grid(j * w + i).text = board.matrix(j)(i).mapFieldState
       grid(j * w + i).repaint()
     }
+  }
+
+  private def gridClick(click: MouseClicked)(using board:Board): Unit = {
+    val name = click.source.name.split('_')
+    val x = name(0).toInt
+    val y = name(1).toInt
+    val move = click.peer.getButton match {
+      case java.awt.event.MouseEvent.BUTTON1 => Move('L', x, y)
+      case java.awt.event.MouseEvent.BUTTON3 => Move('R', x, y)
+    }
+    onMove(board, List(move))
+    score = score - 1
+    redrawLabels()
   }
 
   var frame:Frame = new Frame()
