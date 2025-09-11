@@ -15,23 +15,27 @@ object LevelPlayer {
   private def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
     click.source.name match {
       case "btnSave" =>
+        Ticker.stop()
         val chooser = new FileChooser(new File(Constants.savesPaths))
         if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
           val save: Save = Save(board.matrix, board.level.matrix, time.seconds, score)
           val jsonString: String = save.asJson.noSpaces
           Files.write(chooser.selectedFile.toPath, jsonString.getBytes(StandardCharsets.UTF_8))
         }
+        Ticker.start(onTick, 1000)
       case "btnHint" =>
         val (hintY, hintX) = board.getRandomSafeUnopened
         onMove(board, List(Move('L', hintX, hintY)))
         score = score - 2
       case "btnMoves" =>
+        Ticker.stop()
         val chooser = new FileChooser(new File(Constants.movesPaths))
         if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
           val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
           onMove(board, moves)
           score = score - moves.length
         }
+        Ticker.start(onTick, 1000)
     }
     redrawLabels()
   }
