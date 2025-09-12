@@ -1,4 +1,6 @@
-import scala.swing.Font;
+package rs.ac.bg.etf.student.am233317.minesweeper.utility
+
+import scala.swing.Font
 
 object Constants {
 

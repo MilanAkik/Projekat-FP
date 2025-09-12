@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.utility
+
 import java.io.File
 
 object MovesParser {
