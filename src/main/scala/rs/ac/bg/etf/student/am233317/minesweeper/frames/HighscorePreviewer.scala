@@ -1,5 +1,8 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
+import rs.ac.bg.etf.student.am233317.minesweeper.utility.Constants
+import rs.ac.bg.etf.student.am233317.minesweeper.model.Score
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.MenuLabel
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets.UTF_8
 import scala.swing.{BoxPanel, Component, Frame, GridPanel, Orientation, Swing}

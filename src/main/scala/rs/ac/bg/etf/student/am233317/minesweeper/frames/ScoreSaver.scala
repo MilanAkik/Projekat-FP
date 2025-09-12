@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.{MenuLabel, MenuButton, SaveScoreTextBox}
 import scala.swing.event.ButtonClicked
 import scala.swing.{BoxPanel, Component, Frame, Orientation, Swing}
 

@@ -1,5 +1,8 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
+import rs.ac.bg.etf.student.am233317.minesweeper.utility.Constants
+import rs.ac.bg.etf.student.am233317.minesweeper.model.{Save, Score}
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.{MenuButton, MenuLabel}
 import io.circe.*
 import io.circe.parser.*
 import io.circe.syntax.*
