@@ -16,24 +16,30 @@ object LevelPlayer {
   private def handleToolbarClick(click: MouseClicked)(using board: Board): Unit = {
     click.source.name match {
       case "btnSave" =>
-        Ticker.stop()
-        val chooser = new FileChooser(new File(Constants.savesPaths))
-        if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
-          val save: Save = Save(board.matrix, board.level.matrix, time.seconds, score)
-          Files.write(chooser.selectedFile.toPath, save.asJson.noSpaces.getBytes(UTF_8))
+        if(running) {
+          Ticker.stop()
+          val chooser = new FileChooser(new File(Constants.savesPaths))
+          if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
+            val save: Save = Save(board.matrix, board.level.matrix, time.seconds, score)
+            Files.write(chooser.selectedFile.toPath, save.asJson.noSpaces.getBytes(UTF_8))
+          }
+          Ticker.start(onTick, 1000)
         }
-        Ticker.start(onTick, 1000)
       case "btnHint" =>
-        val (hintY, hintX) = board.getRandomSafeUnopened
-        onMove(List(Move('L', hintX, hintY)), 2)
-      case "btnMoves" =>
-        Ticker.stop()
-        val chooser = new FileChooser(new File(Constants.movesPaths))
-        if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
-          val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
-          onMove(moves, moves.length)
+        if(running) {
+          val (hintY, hintX) = board.getRandomSafeUnopened
+          onMove(List(Move('L', hintX, hintY)), 2)
         }
-        Ticker.start(onTick, 1000)
+      case "btnMoves" =>
+        if (running) {
+          Ticker.stop()
+          val chooser = new FileChooser(new File(Constants.movesPaths))
+          if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
+            val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
+            onMove(moves, moves.length)
+          }
+          Ticker.start(onTick, 1000)
+        }
     }
     redrawLabels()
   }
@@ -79,6 +85,7 @@ object LevelPlayer {
       minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
+    running = true
   }
 
   def makeFrame(save: Save): Unit = {
@@ -99,6 +106,7 @@ object LevelPlayer {
       minimumSize = Dimension(800,600)
     }
     Ticker.start(onTick, 1000)
+    running = true
   }
 
   private def redrawLabels():Unit = {
@@ -129,11 +137,13 @@ object LevelPlayer {
     score = score - scoreUpdate
     if(failed){
       Ticker.stop()
+      running = false
     }
     val succeded: Boolean = board.unopenedSafeCount == 0
     if (succeded){
       Ticker.stop()
       ScoreSaver.makeFrame(saveHighscore)
+      running = false
     }
   }
 
@@ -149,16 +159,19 @@ object LevelPlayer {
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {
-    val Array(x, y, rest*) = click.source.name.split('_')
-    val move = click.peer.getButton match {
-      case BUTTON1 => Move('L', x.toInt, y.toInt)
-      case BUTTON3 => Move('R', x.toInt, y.toInt)
+    if(running){
+      val Array(x, y, rest*) = click.source.name.split('_')
+      val move = click.peer.getButton match {
+        case BUTTON1 => Move('L', x.toInt, y.toInt)
+        case BUTTON3 => Move('R', x.toInt, y.toInt)
+      }
+      onMove(List(move), 1)
+      redrawLabels()
     }
-    onMove(List(move), 1)
-    redrawLabels()
   }
 
   var frame:Frame = new Frame()
+  private var running:Boolean = true
   private var grid : List[Button] = List()
   private var time: Time = _
   private var score: Int = _
