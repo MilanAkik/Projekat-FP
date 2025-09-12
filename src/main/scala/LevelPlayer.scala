@@ -129,8 +129,6 @@ object LevelPlayer {
     }
     score = score - scoreUpdate
     ScoreSaver.makeFrame((name:String) => {println(name)})
-    ScoreSaver.frame.visible = true
-    ScoreSaver.frame.centerOnScreen()
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {

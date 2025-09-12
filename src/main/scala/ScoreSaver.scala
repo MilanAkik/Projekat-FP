@@ -3,6 +3,9 @@ import scala.swing.{BoxPanel, Component, Frame, Orientation, Swing}
 
 object ScoreSaver {
   def makeFrame(callback: String => Unit): Unit = {
+    val label: MenuLabel = new MenuLabel("Ime")
+    val textBox: SaveScoreTextBox = new SaveScoreTextBox()
+    val button: MenuButton = new MenuButton("Sacuvaj")
     frame = new Frame() {
       val elements: List[Component] = List(label, textBox, button)
       val strutted: List[Component] = elements.map(btn => List(btn, Swing.VStrut(20))).flatten(x => x)
@@ -12,7 +15,6 @@ object ScoreSaver {
         border = Swing.EmptyBorder(20, 60, 20, 60)
       }
       for (element <- elements) listenTo(element)
-
       reactions += {
         case _: ButtonClicked =>
           if(textBox.text.nonEmpty){
@@ -21,11 +23,10 @@ object ScoreSaver {
           }
       }
     }
+    frame.visible = true
+    frame.centerOnScreen()
   }
 
-  var frame: Frame = new Frame()
-  val label: MenuLabel = new MenuLabel("Ime")
-  val textBox: SaveScoreTextBox = new SaveScoreTextBox()
-  val button: MenuButton = new MenuButton("Sacuvaj")
+  private var frame: Frame = new Frame()
 
 }
