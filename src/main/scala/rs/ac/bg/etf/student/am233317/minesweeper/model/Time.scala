@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.model
+
 class Time(var seconds: Int ) {
   def increment(ammount: Int = 1): Unit = seconds = seconds + ammount
 

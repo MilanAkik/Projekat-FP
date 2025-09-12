@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.model
+
 import scala.util.Random
 
 class Level {

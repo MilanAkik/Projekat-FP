@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.model
+
 enum FieldState {
   case Unopened, Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Flag, Bomb
 
