@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.utility
 
+import rs.ac.bg.etf.student.am233317.minesweeper.model.Move
 import java.io.File
 
 object MovesParser {

@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.utility
 
+import rs.ac.bg.etf.student.am233317.minesweeper.model.{Board, Move, FieldState, Level}
 import scala.annotation.tailrec
 
 object MoveApplicator {
