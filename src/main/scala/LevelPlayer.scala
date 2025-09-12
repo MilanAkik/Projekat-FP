@@ -7,7 +7,7 @@ import io.circe.parser.*
 import io.circe.syntax.*
 import io.circe.generic.auto.*
 import java.awt.Dimension
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Files, Path, Paths}
 import java.nio.charset.StandardCharsets.UTF_8
 import java.awt.event.MouseEvent.{BUTTON1, BUTTON3}
 
@@ -122,13 +122,24 @@ object LevelPlayer {
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
     val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
-    if (failed || board.unopenedSafeCount == 0) Ticker.stop()
     for (j <- 0 until h; i <- 0 until w) {
       grid(j * w + i).text = board.matrix(j)(i).mapFieldState
       grid(j * w + i).repaint()
     }
     score = score - scoreUpdate
-    ScoreSaver.makeFrame((name:String) => {println(name)})
+    if(failed){
+      Ticker.stop()
+    }
+    val succeded: Boolean = board.unopenedSafeCount == 0
+    if (succeded){
+      Ticker.stop()
+      ScoreSaver.makeFrame(saveHighscore)
+    }
+  }
+
+  def saveHighscore(name: String): Unit = {
+    val highscore: Score = Score(name, score)
+    Files.write(Paths.get(Constants.highscorePaths), highscore.asJson.noSpaces.getBytes(UTF_8))
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {

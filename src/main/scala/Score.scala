@@ -1,1 +1,1 @@
-case class Score(name: String, score: Int, time: Time)
+case class Score(name: String, score: Int)
