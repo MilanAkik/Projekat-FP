@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.frames
+
 import scala.swing.event.ButtonClicked
 import scala.swing.{Alignment, BoxPanel, Button, Component, Font, Frame, GridPanel, Label, Orientation, Swing}
 

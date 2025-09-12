@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.frames
+
 import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets.UTF_8
 import scala.swing.{BoxPanel, Component, Frame, GridPanel, Orientation, Swing}

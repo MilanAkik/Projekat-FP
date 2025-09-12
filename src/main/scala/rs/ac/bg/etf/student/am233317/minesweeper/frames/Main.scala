@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.frames
+
 import io.circe.*
 import io.circe.parser.*
 import io.circe.syntax.*

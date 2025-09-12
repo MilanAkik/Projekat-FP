@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.frames
+
 import java.io.File
 import scala.swing.event.{ButtonClicked, MouseClicked, WindowClosing}
 import scala.swing.{BoxPanel, Button, Component, FileChooser, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
