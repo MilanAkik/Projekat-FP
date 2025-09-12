@@ -128,6 +128,9 @@ object LevelPlayer {
       grid(j * w + i).repaint()
     }
     score = score - scoreUpdate
+    ScoreSaver.makeFrame((name:String) => {println(name)})
+    ScoreSaver.frame.visible = true
+    ScoreSaver.frame.centerOnScreen()
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {
