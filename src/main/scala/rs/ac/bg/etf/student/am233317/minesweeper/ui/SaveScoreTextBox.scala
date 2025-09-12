@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.ui
+
 import scala.swing.{Alignment, Dimension, TextField}
 
 class SaveScoreTextBox() extends TextField() {

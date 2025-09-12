@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper.ui
+
 import javax.swing.border.EmptyBorder
 import scala.swing.{Alignment, Button, Dimension}
 
