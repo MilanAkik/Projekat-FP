@@ -138,8 +138,14 @@ object LevelPlayer {
   }
 
   def saveHighscore(name: String): Unit = {
+    val path = Paths.get(Constants.highscorePaths)
     val highscore: Score = Score(name, score)
-    Files.write(Paths.get(Constants.highscorePaths), highscore.asJson.noSpaces.getBytes(UTF_8))
+    val jsonString = Files.readString(path, UTF_8)
+    val result: Either[io.circe.Error, List[Score]] = decode[List[Score]](jsonString)
+    val list = result match
+      case Right(highscores) => highscore :: highscores
+      case Left(error) => List(highscore)
+    Files.write(path, list.asJson.noSpaces.getBytes(UTF_8))
   }
 
   private def gridClick(click: MouseClicked)(using board:Board): Unit = {
