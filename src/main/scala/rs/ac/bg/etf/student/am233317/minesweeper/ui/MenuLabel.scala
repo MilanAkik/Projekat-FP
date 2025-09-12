@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.ui
 
+import rs.ac.bg.etf.student.am233317.minesweeper.utility.Constants
 import javax.swing.border.EmptyBorder
 import scala.swing.{Alignment, Dimension, Label}
 
