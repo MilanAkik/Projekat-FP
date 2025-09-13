@@ -1,3 +1,5 @@
+package rs.ac.bg.etf.student.am233317.minesweeper
+
 import collection.mutable.Stack
 import org.scalatest.*
 import flatspec.*
