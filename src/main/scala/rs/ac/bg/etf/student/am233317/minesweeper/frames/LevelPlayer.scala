@@ -96,7 +96,7 @@ object LevelPlayer {
   def makeFrame(save: Save): Unit = {
     time = new Time(save.time)
     score = save.score
-    val level: Level = new Level(save)
+    val level: Level = new Level(save.level)
     frame = new Frame() {
       val board: Board = new Board(level)
       board.loadBoard(save)

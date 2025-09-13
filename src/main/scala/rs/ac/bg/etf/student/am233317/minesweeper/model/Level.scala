@@ -21,9 +21,9 @@ class Level {
       case _ => readInMatrix(Constants.levelPaths + "\\" + difficulty + "\\" + fileName)
   }
 
-  def this(save: Save) = {
+  def this(level: Array[Array[Boolean]]) = {
     this()
-    matrix = save.level
+    matrix = level
   }
 
   private def readInMatrix(path: String):Array[Array[Boolean]] = {
