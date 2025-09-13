@@ -136,12 +136,13 @@ object LevelPlayer {
   private def onMove(moves:List[Move], scoreUpdate: Int)(using board: Board): Unit = {
     val w: Int = board.level.Width()
     val h: Int = board.level.Height()
-    val failed: Boolean = MoveApplicator.ApplyMoves(board, moves)
+    MoveApplicator.ApplyMoves(board, moves)
     for (j <- 0 until h; i <- 0 until w) {
       grid(j * w + i).text = board.matrix(j)(i).mapFieldState
       grid(j * w + i).repaint()
     }
     score = score - scoreUpdate
+    val failed: Boolean = board.unopenedBombCount > 0
     if(failed){
       Ticker.stop()
       running = false

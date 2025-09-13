@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 
 object MoveApplicator {
   @tailrec
-  def ApplyMoves(board: Board, moves:List[Move]): Boolean = {
+  def ApplyMoves(board: Board, moves:List[Move]): Unit = {
     val Move(button,x,y) = moves.head
     var rest = moves.tail
     val oldVal = board.matrix(y)(x)
@@ -52,7 +52,6 @@ object MoveApplicator {
     }
     board.matrix(y)(x) = newVal
     if (rest.nonEmpty) ApplyMoves(board, rest)
-    else newVal == FieldState.Bomb
   }
 
   private def getSurroundingCount(level: Level, x:Int, y:Int): Int = {

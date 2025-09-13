@@ -17,7 +17,16 @@ class Board(var l:Level) {
       col <- 0 until level.Width()
       if !level.matrix(row)(col) && matrix(row)(col) == FieldState.Unopened
     } yield (row, col)
-    deltas.count(x=>true)
+    deltas.count(_ => true)
+  }
+
+  def unopenedBombCount: Int = {
+    val deltas = for {
+      row <- 0 until level.Height()
+      col <- 0 until level.Width()
+      if matrix(row)(col) == FieldState.Bomb
+    } yield (row, col)
+    deltas.count(_ => true)
   }
 
   def getRandomSafeUnopened: (Int, Int) = {
