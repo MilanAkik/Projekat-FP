@@ -5,9 +5,7 @@ import java.io.File
 
 object MovesParser {
 
-  def parseMoves(file: File): List[Move] = {
-    val source = scala.io.Source.fromFile(file)
-    val linesString = try source.mkString finally source.close()
+  def parseMoves(linesString: String): List[Move] = {
     val lines = linesString.split("(\r\n|\n)")
     lines.toList.map(t=>makeMove(t))
   }

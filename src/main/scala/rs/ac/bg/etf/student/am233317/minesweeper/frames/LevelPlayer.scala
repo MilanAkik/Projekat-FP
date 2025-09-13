@@ -40,7 +40,9 @@ object LevelPlayer {
           Ticker.stop()
           val chooser = new FileChooser(new File(Constants.movesPaths))
           if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
-            val moves: List[Move] = MovesParser.parseMoves(chooser.selectedFile)
+            val source = scala.io.Source.fromFile(chooser.selectedFile)
+            val linesString = try source.mkString finally source.close()
+            val moves: List[Move] = MovesParser.parseMoves(linesString)
             onMove(moves, moves.length)
           }
           Ticker.start(onTick, 1000)
