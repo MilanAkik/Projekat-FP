@@ -5,7 +5,7 @@ import org.scalatest.*
 import flatspec.*
 import matchers.*
 
-class ExampleSpec extends AnyFlatSpec with should.Matchers {
+class ExampleSpec extends BaseSpec {
 
   "A Stack" should "pop values in last-in-first-out order" in {
     val stack = new Stack[Int]
