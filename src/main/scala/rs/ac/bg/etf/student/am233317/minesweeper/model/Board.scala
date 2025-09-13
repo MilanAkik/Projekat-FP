@@ -20,7 +20,7 @@ class Board(var l:Level) {
     deltas.count(_ => true)
   }
 
-  def unopenedBombCount: Int = {
+  def openedBombCount: Int = {
     val deltas = for {
       row <- 0 until level.Height()
       col <- 0 until level.Width()

@@ -142,7 +142,7 @@ object LevelPlayer {
       grid(j * w + i).repaint()
     }
     score = score - scoreUpdate
-    val failed: Boolean = board.unopenedBombCount > 0
+    val failed: Boolean = board.openedBombCount > 0
     if(failed){
       Ticker.stop()
       running = false
