@@ -7,8 +7,8 @@ class Board(var l:Level) {
   val level: Level = l
   var matrix: Array[Array[FieldState]] = initBoard()
 
-  def loadBoard(save: Save): Unit = {
-    matrix = save.board
+  def loadBoard(board: Array[Array[FieldState]]): Unit = {
+    matrix = board
   }
 
   def unopenedSafeCount : Int = {

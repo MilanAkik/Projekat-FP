@@ -97,10 +97,10 @@ object LevelPlayer {
     time = new Time(save.time)
     score = save.score
     val level: Level = new Level(save.level)
+    val board: Board = new Board(level)
+    board.loadBoard(save.board)
+    given Board = board
     frame = new Frame() {
-      val board: Board = new Board(level)
-      board.loadBoard(save)
-      given Board = board
       val elements: List[Component] = List(makeToolbar(), Swing.VStrut(10), makeGrid())
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
