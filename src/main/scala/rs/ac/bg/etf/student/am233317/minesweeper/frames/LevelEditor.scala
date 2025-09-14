@@ -27,7 +27,7 @@ object LevelEditor {
   }
 
   private def makeUpperPanel()(using level: Level): FlowPanel = new FlowPanel(){
-        val elements: List[Component] = List(txtTransforms, makeButtons())
+      val elements: List[Component] = List(txtTransforms, makeButtons())
     for (element <- elements) {
       contents += element
     }

@@ -51,7 +51,7 @@ object Main extends SimpleSwingApplication {
           }
         }
       case ButtonClicked(`buttonEdit`) =>
-        val a = Array(Array(true, false),Array(false, true))
+        val a = Array.tabulate(10,10)((y,x)=>y==x)
         LevelEditor.makeFrame(new Level(a))
       case ButtonClicked(`buttonHighScore`) => HighscorePreviewer.makeFrame()
       case ButtonClicked(`buttonQuit`) => this.close()
