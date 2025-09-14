@@ -4,7 +4,7 @@ import org.scalatest.Inspectors.forAll
 import org.scalatest.prop.TableDrivenPropertyChecks.whenever
 import rs.ac.bg.etf.student.am233317.minesweeper.model.{Level, Save, Score}
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.{Error, Transform}
-import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, DelRow, DelCol}
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, DelCol, DelRow, Toggle}
 
 class BasicTransformTests extends BaseSpec {
 
@@ -215,5 +215,61 @@ class BasicTransformTests extends BaseSpec {
     res1.Message should be("del_col_left does not accept any arguments")
     res2.Message should be("del_col_right does not accept any arguments")
   }
+
+  "Toggle" should "Return a level with toggled field at (2,2)" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.tabulate(h, w)((y, x) => y == x)
+    val level: Level = new Level(array)
+    val t: Transform = new Toggle()
+    val args2 = Array(2,2)
+    val result = t(level, args2)
+    val res = result.value
+    res.Width() should be(w)
+    res.Height() should be(h)
+    forAll(res.matrix.zipWithIndex) { case (row, y) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(y == x && y!=2)
+      }
+    }
+  }
+
+  it should "Return a level with true at the main diagonal if toggle is ran on (i,i) foreach i in[0,5]" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(false)
+    val level: Level = new Level(array)
+    val t: Transform = new Toggle()
+    var res = level
+    for(i <- 0 until w) res = t(res, Array(i,i)).value
+    res.Width() should be(w)
+    res.Height() should be(h)
+    forAll(res.matrix.zipWithIndex) { case (row, y) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(y == x)
+      }
+    }
+  }
+
+  it should "Return an error when wrong number of parameters are passed or when parameters are outside of domain" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.tabulate(h, w)((y, x) => y == x)
+    val level: Level = new Level(array)
+    val t: Transform = new Toggle()
+    val args1 = Array(1, 2, 3)
+    val args2 = Array(-1, 2)
+    val args3 = Array(1, -2)
+    val result1 = t(level, args1)
+    val result2 = t(level, args2)
+    val result3 = t(level, args3)
+    val res1 = result1.left.value
+    val res2 = result2.left.value
+    val res3 = result3.left.value
+    res1.Message should be("toggle expects exactly 2 arguments but recieved 3")
+    res2.Message should be("Argument x=-1 is outside of the level")
+    res3.Message should be("Argument y=-2 is outside of the level")
+  }
+
 
 }
