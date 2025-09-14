@@ -2,7 +2,7 @@ package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
 import rs.ac.bg.etf.student.am233317.minesweeper.model.{Board, Save, Move, Time, Level, Score}
 import rs.ac.bg.etf.student.am233317.minesweeper.utility.{Constants, Ticker, MovesParser, MoveApplicator}
-import rs.ac.bg.etf.student.am233317.minesweeper.ui.{MenuButton, MenuLabel}
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.{MenuButton, MenuLabel, GridButton}
 import java.io.File
 import scala.swing.event.{ButtonClicked, MouseClicked, WindowClosing}
 import scala.swing.{BoxPanel, Button, Component, FileChooser, FlowPanel, Frame, GridPanel, Label, Orientation, Swing, ToolBar}
@@ -66,7 +66,7 @@ object LevelPlayer {
     new GridPanel(h,w){
       grid = List()
       for (j <- 0 until h; i <- 0 until w)
-        grid = grid :+ new MenuButton(board.matrix(j)(i).mapFieldState) { name = i + "_" + j }
+        grid = grid :+ new GridButton(board.matrix(j)(i).mapFieldState) { name = i + "_" + j }
       for (element <- grid) {
         contents += element
         listenTo(element.mouse.clicks)

@@ -2,7 +2,7 @@ package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
 import rs.ac.bg.etf.student.am233317.minesweeper.frames.LevelPlayer.{btnHint, btnMoves, btnSave, handleToolbarClick, labelScore, labelTime}
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
-import rs.ac.bg.etf.student.am233317.minesweeper.ui.{ MenuButton, TransformField }
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.{ MenuButton, TransformField, GridButton }
 import scala.swing.{Button, Component, FlowPanel, GridPanel, Frame, Swing, BoxPanel, Orientation, Dimension}
 import scala.swing.event.MouseClicked
 import scala.swing.event.{ButtonClicked, MouseClicked, WindowClosing}
@@ -38,7 +38,7 @@ object LevelEditor {
     grid = List()
     new GridPanel(h, w) {
       for (j <- 0 until h; i <- 0 until w)
-        grid = grid :+ new MenuButton(if(level.matrix(j)(i)) "@" else " ")
+        grid = grid :+ new GridButton(if(level.matrix(j)(i)) "@" else " ")
       for (element <- grid) { contents += element }
     }
   }
