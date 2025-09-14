@@ -12,13 +12,14 @@ object LevelEditor {
   private def handleToolbarClick(click: MouseClicked)(using level: Level): Unit = {
     click.source.name match {
       case "btnLoadComposite" => println("btnLoadComposite")
+      case "btnApplyComposite" => println("btnApplyComposite")
       case "btnSaveComposite" => println("btnSaveComposite")
       case "btnSaveLevel" => println("btnSaveLevel")
     }
   }
 
   private def makeButtons()(using level: Level): BoxPanel = new BoxPanel(Orientation.Vertical) {
-    val elements: List[Component] = List(btnLoadComposite, btnSaveComposite, btnSaveLevel)
+    val elements: List[Component] = List(btnLoadComposite, btnApplyComposite, btnSaveComposite, btnSaveLevel)
     for (element <- elements) {
       contents += element
       listenTo(element.mouse.clicks)
@@ -61,6 +62,7 @@ object LevelEditor {
   private var frame: Frame = _
   private val txtTransforms: TransformField = new TransformField()
   private val btnLoadComposite: Button = new MenuButton("Ucitaj kompozit") { name = "btnLoadComposite" }
+  private val btnApplyComposite: Button = new MenuButton("Primeni kompozit") { name = "btnApplyComposite" }
   private val btnSaveComposite: Button = new MenuButton("Sacuvaj kompozit") { name = "btnSaveComposite" }
   private val btnSaveLevel: Button = new MenuButton("Sacuvaj nivo") { name = "btnSaveLevel" }
 }
