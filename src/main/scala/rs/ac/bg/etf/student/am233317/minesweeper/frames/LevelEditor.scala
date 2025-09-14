@@ -15,7 +15,7 @@ object LevelEditor {
 
   private def handleToolbarClick(click: MouseClicked)(using level: Level): Unit = {
     click.source.name match {
-      case "btnLoadComposite" => println("btnLoadComposite")
+      case "btnLoadComposite" =>
         val chooser = new FileChooser(new File(Constants.compositesPaths))
         if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
           val source = scala.io.Source.fromFile(chooser.selectedFile)
@@ -29,7 +29,12 @@ object LevelEditor {
           val text = txtTransforms.text
           Files.write(chooser.selectedFile.toPath, text.getBytes(UTF_8))
         }
-      case "btnSaveLevel" => println("btnSaveLevel")
+      case "btnSaveLevel" =>
+        val chooser = new FileChooser(new File(Constants.levelPaths))
+        if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
+          val text = level.matrix.map(x=>x.map(b=>if(b) '#' else '-').mkString).mkString("\n")
+          Files.write(chooser.selectedFile.toPath, text.getBytes(UTF_8))
+        }
     }
   }
 
@@ -43,10 +48,8 @@ object LevelEditor {
   }
 
   private def makeUpperPanel()(using level: Level): FlowPanel = new FlowPanel(){
-      val elements: List[Component] = List(txtTransforms, makeButtons())
-    for (element <- elements) {
-      contents += element
-    }
+    val elements: List[Component] = List(txtTransforms, makeButtons())
+    for (element <- elements) contents += element
   }
   private def makeGrid()(using level: Level): GridPanel = {
     val w: Int = level.Width()
@@ -60,8 +63,9 @@ object LevelEditor {
   }
 
   def makeFrame(level: Level): Unit = {
+    currentLevel = level
     frame = new Frame() {
-      given Level = level
+      given Level = currentLevel
       val elements: List[Component] = List( makeUpperPanel(), Swing.VStrut(10), makeGrid())
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
@@ -73,6 +77,7 @@ object LevelEditor {
     frame.centerOnScreen()
   }
 
+  private var currentLevel: Level = _
   private var grid: List[Button] = List()
   private var frame: Frame = _
   private val txtTransforms: TransformField = new TransformField()
