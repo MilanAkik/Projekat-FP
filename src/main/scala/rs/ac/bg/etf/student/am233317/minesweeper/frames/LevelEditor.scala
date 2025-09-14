@@ -67,7 +67,7 @@ object LevelEditor {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
-//      minimumSize = Dimension(1024, 768)
+      minimumSize = new Dimension(1024, 768)
     }
     frame.visible = true
     frame.centerOnScreen()

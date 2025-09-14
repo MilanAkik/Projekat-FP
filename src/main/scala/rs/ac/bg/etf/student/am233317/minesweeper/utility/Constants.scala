@@ -12,5 +12,6 @@ object Constants {
 
   val customFont = new Font("Arial", 1000, 32)
   val gridFont = new Font("Consolas", 1000, 16)
+  val textAreaFont = new Font("Arial", 1000, 24)
 
 }
