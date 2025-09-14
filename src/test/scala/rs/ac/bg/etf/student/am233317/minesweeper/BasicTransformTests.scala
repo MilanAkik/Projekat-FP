@@ -112,40 +112,4 @@ class BasicTransformTests extends BaseSpec {
     res2.Message should be("add_col_right does not accept any arguments")
   }
 
-  /*
-  val a = new Array[Array[Boolean]](2)
-  a(0) = Array[Boolean](true,true)
-  a(1) = Array[Boolean](true,true)
-  val l: Level = new Level(a)
-  val t1: Transform = new AddRow(true)
-  val t2: Transform = new AddRow(false)
-  val t3: Transform = new AddCol(true)
-  val t4: Transform = new AddCol(false)
-  val args1 = new Array[Int](0)
-  val args2 = new Array[Int](1)
-  printResults(t1(l, args1))
-  printResults(t1(l, args2))
-  printResults(t2(l, args1))
-  printResults(t2(l, args2))
-  printResults(t3(l, args1))
-  printResults(t3(l, args2))
-  printResults(t4(l, args1))
-  printResults(t4(l, args2))
-
-  def printResults(res: Either[Level, Error]): Unit = {
-    res match
-      case Left(level) => printLevel(level)
-      case Right(error) => println(s"Failure> ${error.Message}")
-  }
-
-  def printLevel(l: Level): Unit = {
-    for(i <- 0 until l.Height()){
-      for(j <- 0 until l.Width()){
-        print("%s\t" format l.matrix(i)(j))
-      }
-      print('\n')
-    }
-  }
-  */
-
 }
