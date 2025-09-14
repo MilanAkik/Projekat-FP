@@ -60,6 +60,58 @@ class BasicTransformTests extends BaseSpec {
     res2.Message should be("add_row_bottom does not accept any arguments")
   }
 
+  "The AddCol" should "Return a level with one empty column to the left" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t: Transform = new AddCol(true)
+    val args0 = new Array[Int](0)
+    val result = t(level, args0)
+    val res = result.value
+    res.Width() should be(6)
+    res.Height() should be(5)
+    forAll(res.matrix.zipWithIndex) { case (row, _) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(x > 0)
+      }
+    }
+  }
+
+  it should "Return a level with one empty column to the right" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t: Transform = new AddCol(false)
+    val args0 = new Array[Int](0)
+    val result = t(level, args0)
+    val res = result.value
+    res.Width() should be(6)
+    res.Height() should be(5)
+    forAll(res.matrix.zipWithIndex) { case (row, _) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(x < w)
+      }
+    }
+  }
+
+  it should "Return an error when any parameters are passed" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t1: Transform = new AddCol(true)
+    val t2: Transform = new AddCol(false)
+    val args1 = new Array[Int](1)
+    val result1 = t1(level, args1)
+    val result2 = t2(level, args1)
+    val res1 = result1.left.value
+    val res2 = result2.left.value
+    res1.Message should be("add_col_left does not accept any arguments")
+    res2.Message should be("add_col_right does not accept any arguments")
+  }
+
   /*
   val a = new Array[Array[Boolean]](2)
   a(0) = Array[Boolean](true,true)
