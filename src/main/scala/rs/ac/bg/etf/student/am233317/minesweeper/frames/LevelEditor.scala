@@ -17,13 +17,20 @@ object LevelEditor {
     }
   }
 
-  private def makeButtons()(using level: Level): FlowPanel = new FlowPanel() {
-    val elements: List[Component] = List(txtTransforms, btnLoadComposite, btnSaveComposite, btnSaveLevel)
+  private def makeButtons()(using level: Level): BoxPanel = new BoxPanel(Orientation.Vertical) {
+    val elements: List[Component] = List(btnLoadComposite, btnSaveComposite, btnSaveLevel)
     for (element <- elements) {
       contents += element
       listenTo(element.mouse.clicks)
     }
     reactions += { case click: MouseClicked => handleToolbarClick(click) }
+  }
+
+  private def makeUpperPanel()(using level: Level): FlowPanel = new FlowPanel(){
+        val elements: List[Component] = List(txtTransforms, makeButtons())
+    for (element <- elements) {
+      contents += element
+    }
   }
   private def makeGrid()(using level: Level): GridPanel = {
     val w: Int = level.Width()
@@ -39,7 +46,7 @@ object LevelEditor {
   def makeFrame(level: Level): Unit = {
     frame = new Frame() {
       given Level = level
-      val elements: List[Component] = List( makeButtons(), Swing.VStrut(10), makeGrid())
+      val elements: List[Component] = List( makeUpperPanel(), Swing.VStrut(10), makeGrid())
       contents = new BoxPanel(Orientation.Vertical) {
         for (element <- elements) contents += element
         border = Swing.EmptyBorder(10, 10, 10, 10)

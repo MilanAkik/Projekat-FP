@@ -8,4 +8,5 @@ class TransformField() extends TextArea() {
   font = Constants.customFont
   xLayoutAlignment = 0.5
   maximumSize = new Dimension(Int.MaxValue, preferredSize.height)
+  preferredSize = new Dimension(500, 200)
 }
