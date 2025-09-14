@@ -1,12 +1,12 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.transform.isometric
 
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
-import rs.ac.bg.etf.student.am233317.minesweeper.transform
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.Error
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.IsometricTransform
 
 class Rotate(val expandable: Boolean, val transparent: Boolean) extends IsometricTransform{
 
-  override def apply(level: Level, args: Array[Int]): Either[transform.Error, Level] = {
+  override def apply(level: Level, args: Array[Int]): Either[Error, Level] = {
     val w = level.Width()
     val h = level.Height()
     if (args.length != 7) Left(Error(s"clear expects exactly 7 arguments but recieved ${args.length}"))
@@ -34,7 +34,7 @@ class Rotate(val expandable: Boolean, val transparent: Boolean) extends Isometri
     }
   }
 
-  private def rotatePointAroundAnother(x1:Int, x2:Int, rx:Int, ry:Int, dir:Int): (Int, Int) = {
+  private def rotatePointAroundAnother(x1:Int, y1:Int, rx:Int, ry:Int, dir:Int): (Int, Int) = {
     val xprim = x1-rx
     val yprim = y1-ry
     dir match
