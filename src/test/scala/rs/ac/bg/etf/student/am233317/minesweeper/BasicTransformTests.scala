@@ -4,7 +4,7 @@ import org.scalatest.Inspectors.forAll
 import org.scalatest.prop.TableDrivenPropertyChecks.whenever
 import rs.ac.bg.etf.student.am233317.minesweeper.model.{Level, Save, Score}
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.{Error, Transform}
-import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, DelCol, DelRow, Toggle}
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, ClearArea, DelCol, DelRow, Toggle}
 
 class BasicTransformTests extends BaseSpec {
 
@@ -271,5 +271,79 @@ class BasicTransformTests extends BaseSpec {
     res3.Message should be("Argument y=-2 is outside of the level")
   }
 
+  "Clear" should "Return a level with toggled field in area bound by (1,1) and (3,3)" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t: Transform = new ClearArea()
+    val args4 = Array(1,1,3,3)
+    val result = t(level, args4)
+    val res = result.value
+    res.Width() should be(w)
+    res.Height() should be(h)
+    forAll(res.matrix.zipWithIndex) { case (row, y) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(y<1||y>3||x<1||x>3)
+      }
+    }
+  }
+
+  it should "Return a level with false only at (2,2)" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t: Transform = new ClearArea()
+    val args4 = Array(2,2,2,2)
+    val result = t(level, args4)
+    val res = result.value
+    res.Width() should be(w)
+    res.Height() should be(h)
+    forAll(res.matrix.zipWithIndex) { case (row, y) =>
+      forAll(row.zipWithIndex) { case (value, x) =>
+        value should be(x != 2 || y != 2)
+      }
+    }
+  }
+
+  it should "Return an error when wrong number of parameters are passed or when parameters are outside of domain or wrong order" in {
+    val w = 5
+    val h = 5
+    val array: Array[Array[Boolean]] = Array.fill(h, w)(true)
+    val level: Level = new Level(array)
+    val t: Transform = new ClearArea()
+    val args1 = Array(1, 2, 3)
+    val args2 = Array(-1, 2, 3, 4)
+    val args3 = Array(1, -2, 3, 4)
+    val args4 = Array(1, 2, -3, 4)
+    val args5 = Array(1, 2, 3, -4)
+    val args6 = Array(3, 2, 1, 4)
+    val args7 = Array(1, 4, 3, 2)
+
+    val result1 = t(level, args1)
+    val result2 = t(level, args2)
+    val result3 = t(level, args3)
+    val result4 = t(level, args4)
+    val result5 = t(level, args5)
+    val result6 = t(level, args6)
+    val result7 = t(level, args7)
+
+    val res1 = result1.left.value
+    val res2 = result2.left.value
+    val res3 = result3.left.value
+    val res4 = result4.left.value
+    val res5 = result5.left.value
+    val res6 = result6.left.value
+    val res7 = result7.left.value
+
+    res1.Message should be("clear expects exactly 4 arguments but recieved 3")
+    res2.Message should be("Argument x1=-1 is outside of the level")
+    res3.Message should be("Argument y1=-2 is outside of the level")
+    res4.Message should be("Argument x2=-3 is outside of the level")
+    res5.Message should be("Argument y2=-4 is outside of the level")
+    res6.Message should be("Argument x1 cant be bigger than x2")
+    res7.Message should be("Argument y1 cant be bigger than y2")
+  }
 
 }
