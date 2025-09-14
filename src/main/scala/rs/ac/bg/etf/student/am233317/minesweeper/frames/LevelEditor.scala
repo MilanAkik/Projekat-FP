@@ -2,8 +2,12 @@ package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
 import rs.ac.bg.etf.student.am233317.minesweeper.frames.LevelPlayer.{btnHint, btnMoves, btnSave, handleToolbarClick, labelScore, labelTime}
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
-import rs.ac.bg.etf.student.am233317.minesweeper.ui.{ MenuButton, TransformField, GridButton }
-import scala.swing.{Button, Component, FlowPanel, GridPanel, Frame, Swing, BoxPanel, Orientation, Dimension}
+import rs.ac.bg.etf.student.am233317.minesweeper.ui.{GridButton, MenuButton, TransformField}
+import rs.ac.bg.etf.student.am233317.minesweeper.utility.Constants
+import java.io.File
+import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.{Files, Path, Paths}
+import scala.swing.{BoxPanel, Button, Component, Dimension, FileChooser, FlowPanel, Frame, GridPanel, Orientation, Swing}
 import scala.swing.event.MouseClicked
 import scala.swing.event.{ButtonClicked, MouseClicked, WindowClosing}
 
@@ -13,7 +17,12 @@ object LevelEditor {
     click.source.name match {
       case "btnLoadComposite" => println("btnLoadComposite")
       case "btnApplyComposite" => println("btnApplyComposite")
-      case "btnSaveComposite" => println("btnSaveComposite")
+      case "btnSaveComposite" =>
+        val chooser = new FileChooser(new File(Constants.compositesPaths))
+        if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
+          val text = txtTransforms.text
+          Files.write(chooser.selectedFile.toPath, text.getBytes(UTF_8))
+        }
       case "btnSaveLevel" => println("btnSaveLevel")
     }
   }
