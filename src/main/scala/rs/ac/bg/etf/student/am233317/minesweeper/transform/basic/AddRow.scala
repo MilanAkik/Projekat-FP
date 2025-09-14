@@ -1,7 +1,7 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.transform.basic
 
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
-import rs.ac.bg.etf.student.am233317.minesweeper.transform.{Error, ExpandableTrasform, Transform, TransparentTransform}
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.{Error, Transform}
 
 class AddRow(val top: Boolean) extends Transform {
   override def apply(level: Level, args: Array[Int]): Either[Error,Level] = {
