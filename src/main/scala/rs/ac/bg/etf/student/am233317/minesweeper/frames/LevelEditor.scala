@@ -16,6 +16,12 @@ object LevelEditor {
   private def handleToolbarClick(click: MouseClicked)(using level: Level): Unit = {
     click.source.name match {
       case "btnLoadComposite" => println("btnLoadComposite")
+        val chooser = new FileChooser(new File(Constants.compositesPaths))
+        if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
+          val source = scala.io.Source.fromFile(chooser.selectedFile)
+          val linesString = try source.mkString finally source.close()
+          txtTransforms.text = linesString
+        }
       case "btnApplyComposite" => println("btnApplyComposite")
       case "btnSaveComposite" =>
         val chooser = new FileChooser(new File(Constants.compositesPaths))
