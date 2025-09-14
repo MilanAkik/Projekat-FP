@@ -1,7 +1,7 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
 import rs.ac.bg.etf.student.am233317.minesweeper.utility.Constants
-import rs.ac.bg.etf.student.am233317.minesweeper.model.{Save, Score}
+import rs.ac.bg.etf.student.am233317.minesweeper.model.{Save, Score, Level}
 import rs.ac.bg.etf.student.am233317.minesweeper.ui.{MenuButton, MenuLabel}
 import io.circe.*
 import io.circe.parser.*
@@ -50,7 +50,9 @@ object Main extends SimpleSwingApplication {
             case Left(err) => println(s"Failed to load level: $err")
           }
         }
-      case ButtonClicked(`buttonEdit`) => label.text = "We are still editing!"
+      case ButtonClicked(`buttonEdit`) =>
+        val a = Array(Array(true, false),Array(false, true))
+        LevelEditor.makeFrame(new Level(a))
       case ButtonClicked(`buttonHighScore`) => HighscorePreviewer.makeFrame()
       case ButtonClicked(`buttonQuit`) => this.close()
     }
