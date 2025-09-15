@@ -11,7 +11,7 @@ object Constants {
   val highscorePaths: String = ".\\highscore.json"
 
   val customFont = new Font("Arial", 1000, 32)
-  val gridFont = new Font("Consolas", 1000, 16)
+  val gridFont = new Font("Consolas", Font.Bold.id, 16)
   val textAreaFont = new Font("Arial", 1000, 24)
 
 }
