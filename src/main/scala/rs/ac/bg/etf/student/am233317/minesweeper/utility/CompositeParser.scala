@@ -29,5 +29,6 @@ object CompositeParser {
       case "clear" =>
         val args = components(1).split(',')
         (new ClearArea(),Array[Int](args(0).toInt,args(1).toInt,args(2).toInt,args(3).toInt))
+      case _ => throw new Exception("Unknown transform")
   }
 }
