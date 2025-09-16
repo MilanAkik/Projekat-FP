@@ -51,11 +51,42 @@ object Main extends SimpleSwingApplication {
           }
         }
       case ButtonClicked(`buttonEdit`) =>
-        val a = Array.tabulate(10,10)((y,x)=>y==x)
-        LevelEditor.makeFrame(new Level(a))
+        val chooser = new FileChooser(new File(Constants.levelPaths))
+        if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
+          val source = scala.io.Source.fromFile(chooser.selectedFile)
+          val linesString = try source.mkString finally source.close()
+          val lines = linesString.split("(\r\n|\n)")
+          val rows = lines.length
+          val cols = lines(0).length
+          val res = new Array[Array[Boolean]](rows)
+          for (i <- 0 until rows) {
+            res(i) = new Array[Boolean](cols)
+            for (j <- 0 until cols) {
+              res(i)(j) = lines(i)(j) == '#'
+            }
+          }
+          LevelEditor.makeFrame(new Level(res))
+        }
       case ButtonClicked(`buttonHighScore`) => HighscorePreviewer.makeFrame()
       case ButtonClicked(`buttonQuit`) => this.close()
     }
     centerOnScreen()
   }
+
+  private def readInMatrix(path: String): Array[Array[Boolean]] = {
+    val source = scala.io.Source.fromFile(path)
+    val linesString = try source.mkString finally source.close()
+    val lines = linesString.split("(\r\n|\n)")
+    val rows = lines.length
+    val cols = lines(0).length
+    val res = new Array[Array[Boolean]](rows)
+    for (i <- 0 until rows) {
+      res(i) = new Array[Boolean](cols)
+      for (j <- 0 until cols) {
+        res(i)(j) = lines(i)(j) == '#'
+      }
+    }
+    res
+  }
+
 }
