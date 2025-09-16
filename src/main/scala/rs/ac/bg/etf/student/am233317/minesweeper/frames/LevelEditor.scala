@@ -69,6 +69,10 @@ object LevelEditor {
   }
 
   private def makeButtons(): BoxPanel = new BoxPanel(Orientation.Vertical) {
+    private val btnLoadComposite: Button = new MenuButton("Ucitaj kompozit") { name = "btnLoadComposite" }
+    private val btnApplyComposite: Button = new MenuButton("Primeni kompozit") { name = "btnApplyComposite" }
+    private val btnSaveComposite: Button = new MenuButton("Sacuvaj kompozit") { name = "btnSaveComposite" }
+    private val btnSaveLevel: Button = new MenuButton("Sacuvaj nivo") { name = "btnSaveLevel" }
     val elements: List[Component] = List(btnLoadComposite, btnApplyComposite, btnSaveComposite, btnSaveLevel)
     for (element <- elements) {
       contents += element
@@ -110,12 +114,7 @@ object LevelEditor {
   }
 
   private var currentLevel: Level = _
-  private var gridPanel: GridPanel = _
   private var boxPanel: BoxPanel = _
   private var frame: Frame = _
   private val txtTransforms: TransformField = new TransformField()
-  private val btnLoadComposite: Button = new MenuButton("Ucitaj kompozit") { name = "btnLoadComposite" }
-  private val btnApplyComposite: Button = new MenuButton("Primeni kompozit") { name = "btnApplyComposite" }
-  private val btnSaveComposite: Button = new MenuButton("Sacuvaj kompozit") { name = "btnSaveComposite" }
-  private val btnSaveLevel: Button = new MenuButton("Sacuvaj nivo") { name = "btnSaveLevel" }
 }
