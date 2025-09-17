@@ -2,7 +2,7 @@ package rs.ac.bg.etf.student.am233317.minesweeper.frames
 
 import rs.ac.bg.etf.student.am233317.minesweeper.frames.LevelPlayer.{btnHint, btnMoves, btnSave, handleToolbarClick, labelScore, labelTime}
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
-import rs.ac.bg.etf.student.am233317.minesweeper.transform.{Error, Transform}
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.{CompositeTransform, Error, Transform}
 import rs.ac.bg.etf.student.am233317.minesweeper.ui.{GridButton, MenuButton, TransformField}
 import rs.ac.bg.etf.student.am233317.minesweeper.utility.{CompositeParser, Constants}
 
@@ -26,8 +26,8 @@ object LevelEditor {
           txtTransforms.text = linesString
         }
       case "btnApplyComposite" =>
-        val transforms = CompositeParser.parseComposite(txtTransforms.text)
-        transformApply(currentLevel,transforms) match
+        val composite = new CompositeTransform(txtTransforms.text)
+        composite(currentLevel,Array()) match
           case Right(lvl) => currentLevel = lvl
           case Left(err) => println(err.Message)
         val gp = makeGrid()
@@ -53,19 +53,6 @@ object LevelEditor {
           Files.write(chooser.selectedFile.toPath, text.getBytes(UTF_8))
         }
     }
-  }
-
-  @tailrec()
-  private def transformApply(l: Level, t: List[(Transform, Array[Int])]) : Either[Error, Level] = {
-    val head = t.head
-    val tail = t.tail
-    val tailEmpty = tail.isEmpty
-    val (tr, args) = head
-    val res = tr(l, args)
-    (tailEmpty, res) match
-      case (true,Right(lvl)) => Right(lvl)
-      case (false,Right(lvl)) => transformApply(lvl, tail)
-      case (_, Left(err)) => Left(err)
   }
 
   private def makeButtons(): BoxPanel = new BoxPanel(Orientation.Vertical) {
