@@ -2,6 +2,7 @@ package rs.ac.bg.etf.student.am233317.minesweeper.utility
 
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.{CompositeTransform, Transform}
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, ClearArea, DelCol, DelRow, Toggle}
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.isometric.Rotate
 import rs.ac.bg.etf.student.am233317.minesweeper.utility.MovesParser.makeMove
 
 import java.io.File
@@ -32,6 +33,9 @@ object CompositeParser {
       case "clear" =>
         val args = components(1).split(',')
         (new ClearArea(),Array[Int](args(0).toInt,args(1).toInt,args(2).toInt,args(3).toInt))
+      case "rotate" =>
+        val args = components(1).split(',')
+        (new Rotate(false, false), Array[Int](args(0).toInt, args(1).toInt, args(2).toInt, args(3).toInt, args(4).toInt, args(5).toInt, args(6).toInt))
       case _ =>
         val pathString = Constants.compositesPaths+"\\"+components(0)
         if (Files.exists(Paths.get(pathString))) {

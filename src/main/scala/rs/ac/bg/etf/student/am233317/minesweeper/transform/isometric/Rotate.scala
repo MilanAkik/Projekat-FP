@@ -3,6 +3,7 @@ package rs.ac.bg.etf.student.am233317.minesweeper.transform.isometric
 import rs.ac.bg.etf.student.am233317.minesweeper.model.Level
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.Error
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.IsometricTransform
+import scala.collection.immutable.Seq
 
 class Rotate(val expandable: Boolean, val transparent: Boolean) extends IsometricTransform{
 
@@ -29,7 +30,14 @@ class Rotate(val expandable: Boolean, val transparent: Boolean) extends Isometri
       val angle = args(6)
       val (nx1, ny1) = rotatePointAroundAnother(x1,y1,rx,ry,angle)
       val (nx2, ny2) = rotatePointAroundAnother(x2,y2,rx,ry,angle)
-      val res: Array[Array[Boolean]] = Array.tabulate(h, w)((y, x) => level.matrix(y)(x))
+      val left = Seq(0, nx1, nx2).min
+      val right = Seq(w, nx1, nx2).max
+      val top = Seq(0, ny1, ny2).min
+      val bottom = Seq(h, ny1, ny2).max
+      val nw = right - left
+      val nh = bottom - top
+      val res: Array[Array[Boolean]] = Array.tabulate(nh, nw)((y, x) => false)
+//      val res: Array[Array[Boolean]] = Array.tabulate(h, w)((y, x) => level.matrix(y)(x))
       Right(new Level(res))
     }
   }
