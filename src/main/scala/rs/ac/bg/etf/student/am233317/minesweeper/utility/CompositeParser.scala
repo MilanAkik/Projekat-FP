@@ -1,8 +1,11 @@
 package rs.ac.bg.etf.student.am233317.minesweeper.utility
 
-import rs.ac.bg.etf.student.am233317.minesweeper.transform.Transform
+import rs.ac.bg.etf.student.am233317.minesweeper.transform.{CompositeTransform, Transform}
 import rs.ac.bg.etf.student.am233317.minesweeper.transform.basic.{AddCol, AddRow, ClearArea, DelCol, DelRow, Toggle}
 import rs.ac.bg.etf.student.am233317.minesweeper.utility.MovesParser.makeMove
+
+import java.io.File
+import java.nio.file.{Files, Paths}
 
 object CompositeParser {
   def parseComposite(composite: String): List[(Transform, Array[Int])] = {
@@ -29,6 +32,13 @@ object CompositeParser {
       case "clear" =>
         val args = components(1).split(',')
         (new ClearArea(),Array[Int](args(0).toInt,args(1).toInt,args(2).toInt,args(3).toInt))
-      case _ => throw new Exception("Unknown transform")
+      case _ =>
+        val pathString = Constants.compositesPaths+"\\"+components(0)
+        if (Files.exists(Paths.get(pathString))) {
+          val source = scala.io.Source.fromFile(new File(pathString))
+          val linesString = try source.mkString finally source.close()
+          (new CompositeTransform(linesString), Array[Int]())
+        }
+        else throw new Exception("Unknown transform")
   }
 }
